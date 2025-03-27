@@ -11,7 +11,7 @@ class ApiHelper {
     suspend fun <T> handleHttpRequest(
         apiCall: suspend () -> Response<T>
     ): Flow<Resource<T>> = flow {
-        emit(Resource.Loader(loading = true))
+        emit(Resource.Loading(loading = true))
         try {
             val response = apiCall.invoke()
             if (response.isSuccessful) {
@@ -22,7 +22,7 @@ class ApiHelper {
                 val errorMessage = response.message().ifEmpty { "error code: ${response.code()}" }
                 emit(Resource.Error(errorMessage = errorMessage))
             }
-            emit(Resource.Loader(loading = false))
+            emit(Resource.Loading(loading = false))
         } catch (throwable: Throwable) {
             when (throwable) {
                 is IOException -> emit(Resource.Error(errorMessage = throwable.message ?: "IO"))
@@ -34,7 +34,7 @@ class ApiHelper {
                 )
                 else -> emit(Resource.Error(errorMessage = throwable.message ?: "Other"))
             }
-            emit(Resource.Loader(loading = false))
+            emit(Resource.Loading(loading = false))
         }
     }
 }

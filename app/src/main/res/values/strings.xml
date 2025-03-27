@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">NextStep</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="all_fields_are_required">All fields are required!</string>
+    <string name="please_enter_a_valid_email_address">Please enter a valid email address!</string>
+    <string name="password_must_be_at_least_8_characters">Password must be at least 8 characters!</string>
+    <string name="login_failed">Login failed</string>
+    <string name="passwords_do_not_match">Passwords do not match!</string>
+    <string name="registration_failed">Registration failed</string>
+    <string name="no_email_found">No email found</string>
+    <string name="language_changed_to">Language changed to %1$s</string>
 </resources>

@@ -4,6 +4,8 @@ plugins {
     //Hilt
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    //Firebase
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -36,6 +38,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -46,6 +52,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.runtime.android)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -58,6 +66,12 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     //Glide
     implementation (libs.glide)
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    //FireStore
+    implementation("com.google.firebase:firebase-firestore")
 
 
 

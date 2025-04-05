@@ -70,7 +70,7 @@ class RegisterViewModel @Inject constructor(
                     }
 
                     is Resource.Loading -> {
-                        updateState { copy(isLoading = true) }
+                        updateState { copy(isLoading = result.loading) }
                     }
 
                     is Resource.Success -> {
@@ -92,6 +92,9 @@ class RegisterViewModel @Inject constructor(
     override fun obtainEvent(event: RegisterEvent) {
         when(event){
             is RegisterEvent.SignUpButtonClicked -> validateInputsAndRegister(event.nickname,event.email,event.password,event.repeatedPassword)
+            RegisterEvent.LogInButtonClicked -> viewModelScope.launch {
+                emitEffect(RegisterEffect.NavToLogInFragment)
+            }
         }
     }
 }

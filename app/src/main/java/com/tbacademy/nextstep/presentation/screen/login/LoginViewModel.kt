@@ -62,7 +62,7 @@ class LoginViewModel @Inject constructor(
                             updateState { copy(isLoading = false) }
                         }
                         is Resource.Loading ->{
-                            updateState { copy(isLoading = true) }
+                            updateState { copy(isLoading = result.loading) }
 
                         }
                         is Resource.Success -> {

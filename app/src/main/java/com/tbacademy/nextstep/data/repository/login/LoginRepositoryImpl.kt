@@ -12,8 +12,8 @@ class LoginRepositoryImpl @Inject constructor(
     private val firebaseAuth : FirebaseAuth
 ) : LoginRepository{
     override fun login(email: String, password: String): Flow<Resource<Boolean>> = flow {
+        emit(Resource.Loading(true))
         try {
-            emit(Resource.Loading(true))
             val result = firebaseAuth.signInWithEmailAndPassword(email,password).await()
             emit(Resource.Success(result.user != null))
 
@@ -24,5 +24,6 @@ class LoginRepositoryImpl @Inject constructor(
 
             emit(Resource.Loading(false))
         }
+        emit(Resource.Loading(false))
     }
 }

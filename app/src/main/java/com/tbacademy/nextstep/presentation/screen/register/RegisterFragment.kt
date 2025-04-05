@@ -1,7 +1,6 @@
 package com.tbacademy.nextstep.presentation.screen.register
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.setFragmentResult
@@ -11,6 +10,7 @@ import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.databinding.FragmentRegisterBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
 import com.tbacademy.nextstep.presentation.extension.collect
+import com.tbacademy.nextstep.presentation.extension.collectLatest
 import com.tbacademy.nextstep.presentation.screen.register.effect.RegisterEffect
 import com.tbacademy.nextstep.presentation.screen.register.event.RegisterEvent
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +25,8 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
         observeState()
 
         setRegisterButtonClickListener()
+
+        startSignInClickListener()
 
         observeEffect()
     }
@@ -47,22 +49,22 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
     }
 
     private fun observeEffect(){
-        collect(registerViewModel.effects){effects ->
+        collectLatest(registerViewModel.effects){ effects ->
             when(effects){
-                RegisterEffect.NavToLogInFragment -> {
-                    setFragmentResult(
-                        "registration_request_key",
-                        Bundle().apply {
-                            putString("email", binding.etEmail.text.toString())
-                            putString("password", binding.etPassword.text.toString())
-                        }
-                    )
-                    navToLoginFragment()
-                }
+                RegisterEffect.NavToLogInFragment -> navToLoginFragment()
                 is RegisterEffect.ShowError -> showMessage(effects.message)
             }
         }
     }
+
+    private fun startSignInClickListener(){
+        binding.btnLogin.setOnClickListener {
+            registerViewModel.obtainEvent(RegisterEvent.LogInButtonClicked)
+        }
+    }
+
+
+
 
     private fun navToLoginFragment(){
         findNavController().navigate(R.id.action_registerFragment_to_loginFragment)

@@ -10,4 +10,10 @@
     <string name="registration_failed">Registration failed</string>
     <string name="no_email_found">No email found</string>
     <string name="language_changed_to">Language changed to %1$s</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="log_in">Log In</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
 </resources>

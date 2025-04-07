@@ -33,18 +33,26 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     }
 
+    override fun listeners() {
+        TODO("Not yet implemented")
+    }
+
+    override fun observers() {
+        TODO("Not yet implemented")
+    }
+
     private fun logInButtonClicked(){
         binding.btnLogin.setOnClickListener{
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
 
-            loginViewModel.obtainEvent(LoginEvent.LoginButtonClicked(email, password))
+            loginViewModel.onEvent(LoginEvent.LoginButtonClicked(email, password))
         }
     }
 
     private fun registerButtonClicked() {
         binding.btnRegister.setOnClickListener {
-            loginViewModel.obtainEvent(LoginEvent.RegisterButtonClicked)
+            loginViewModel.onEvent(LoginEvent.RegisterButtonClicked)
         }
     }
 

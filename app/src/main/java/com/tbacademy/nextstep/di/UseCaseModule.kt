@@ -1,36 +1,35 @@
 package com.tbacademy.nextstep.di
 
-import com.tbacademy.nextstep.domain.usecase.validation.EmailValidationUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.NicknameValidationUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.PasswordValidationUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.RepeatedPasswordValidationUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.validation.ValidatePasswordUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.ValidatePasswordUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateRepeatedPasswordUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateRepeatedPasswordUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateUsernameUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateUsernameUseCaseImpl
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object UseCasesModule {
+interface UseCaseModule {
+    @Singleton
+    @Binds
+    fun bindValidateEmailUseCase(validateEmailUseCase: ValidateEmailUseCaseImpl): ValidateEmailUseCase
 
-    @Provides
-    fun provideEmailValidationUseCase(): EmailValidationUseCase {
-        return EmailValidationUseCase()
-    }
+    @Singleton
+    @Binds
+    fun bindValidatePasswordUseCase(validatePasswordUseCase: ValidatePasswordUseCaseImpl): ValidatePasswordUseCase
 
-    @Provides
-    fun providePasswordValidationUseCase(): PasswordValidationUseCase {
-        return PasswordValidationUseCase()
-    }
+    @Singleton
+    @Binds
+    fun bindValidateRepeatedPasswordUseCase(validateRepeatedPasswordUseCase: ValidateRepeatedPasswordUseCaseImpl): ValidateRepeatedPasswordUseCase
 
-    @Provides
-    fun provideRepeatedPasswordValidationUseCase(): RepeatedPasswordValidationUseCase {
-        return RepeatedPasswordValidationUseCase()
-    }
-
-    @Provides
-    fun provideNicknameValidationUseCase(): NicknameValidationUseCase {
-        return NicknameValidationUseCase()
-    }
-
+    @Singleton
+    @Binds
+    fun bindValidateUsernameUseCase(validateUsernameUseCase: ValidateUsernameUseCaseImpl): ValidateUsernameUseCase
 }

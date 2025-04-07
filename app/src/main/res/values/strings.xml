@@ -22,4 +22,11 @@
     <string name="register">Register</string>
     <string name="i_already_have_account_underline"><u>I Already Have Account</u></string>
     <string name="username">Username</string>
+    <string name="field_is_empty">Field is empty!</string>
+    <string name="nickname_must_be_no_longer_than_20_characters">Nickname must be no longer than 20 characters</string>
+    <string name="nickname_can_only_contain_letters_numbers_and_underscores">Nickname can only contain letters, numbers, and underscores</string>
+    <string name="password_should_be_at_least_8_characters">Password should be at least 8 characters!</string>
+    <string name="password_must_contain_at_least_one_letter_and_one_digit">Password must contain at least one letter and one digit!</string>
+    <string name="invalid_email_format">Invalid email format!</string>
+    <string name="username_must_be_at_least_4_characters">Username must be at least 4 characters</string>
 </resources>

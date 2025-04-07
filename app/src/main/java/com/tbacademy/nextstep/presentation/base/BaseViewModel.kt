@@ -16,7 +16,7 @@ abstract class BaseViewModel<STATE, EVENT, EFFECT>(
     private val _effects = MutableSharedFlow<EFFECT>()
     val effects get() = _effects.asSharedFlow()
 
-    abstract fun obtainEvent(event: EVENT)
+    abstract fun onEvent(event: EVENT)
 
     suspend fun emitEffect(effect: EFFECT) {
         _effects.emit(effect)

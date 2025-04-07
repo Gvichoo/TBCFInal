@@ -16,6 +16,8 @@ abstract class BaseFragment<VB : ViewBinding> (
     protected val binding get() = _binding!!
 
     abstract fun start()
+    abstract fun listeners()
+    abstract fun observers()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

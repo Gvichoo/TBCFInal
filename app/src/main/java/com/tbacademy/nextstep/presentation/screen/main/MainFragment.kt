@@ -11,4 +11,12 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     }
 
+    override fun listeners() {
+        TODO("Not yet implemented")
+    }
+
+    override fun observers() {
+        TODO("Not yet implemented")
+    }
+
 }

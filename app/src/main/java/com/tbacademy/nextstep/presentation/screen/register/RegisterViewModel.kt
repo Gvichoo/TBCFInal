@@ -2,12 +2,12 @@ package com.tbacademy.nextstep.presentation.screen.register
 
 import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.domain.core.Resource
-import com.tbacademy.nextstep.domain.core.ValidationResult
+import com.tbacademy.nextstep.domain.core.InputValidationResult
 import com.tbacademy.nextstep.domain.usecase.register.RegisterUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.EmailValidationUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.NicknameValidationUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.PasswordValidationUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.RepeatedPasswordValidationUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateUsernameUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.ValidatePasswordUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateRepeatedPasswordUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCase
 import com.tbacademy.nextstep.presentation.base.BaseViewModel
 import com.tbacademy.nextstep.presentation.screen.register.effect.RegisterEffect
 import com.tbacademy.nextstep.presentation.screen.register.event.RegisterEvent
@@ -18,11 +18,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val nicknameValidationUseCase: NicknameValidationUseCase,
+    private val nicknameValidationUseCase: ValidateUsernameUseCase,
     private val registerUseCase: RegisterUseCase,
-    private val emailValidationUseCase: EmailValidationUseCase,
-    private val passwordValidationUseCase: PasswordValidationUseCase,
-    private val repeatedPasswordValidationUseCase: RepeatedPasswordValidationUseCase
+    private val emailValidationUseCase: ValidateEmailUseCase,
+    private val passwordValidationUseCase: ValidatePasswordUseCase,
+    private val repeatedPasswordValidationUseCase: ValidateRepeatedPasswordUseCase
 ) : BaseViewModel<RegisterState, RegisterEvent, RegisterEffect>(RegisterState()) {
 
 
@@ -33,23 +33,19 @@ class RegisterViewModel @Inject constructor(
         val passwordValidation = passwordValidationUseCase(password)
         val repeatedPasswordValidation = repeatedPasswordValidationUseCase(password, passwordRepeated)
         when {
-            emailValidation is ValidationResult.Failure -> {
-                showError(emailValidation.error.message)
+            emailValidation is InputValidationResult.Failure -> {
                 return
             }
 
-            passwordValidation is ValidationResult.Failure -> {
-                showError(passwordValidation.error.message)
+            passwordValidation is InputValidationResult.Failure -> {
                 return
             }
 
-            repeatedPasswordValidation is ValidationResult.Failure -> {
-                showError(repeatedPasswordValidation.error.message)
+            repeatedPasswordValidation is InputValidationResult.Failure -> {
                 return
             }
 
-            nicknameValidation is ValidationResult.Failure -> {
-                showError(nicknameValidation.error.message)
+            nicknameValidation is InputValidationResult.Failure -> {
                 return
             }
 
@@ -89,7 +85,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    override fun obtainEvent(event: RegisterEvent) {
+    override fun onEvent(event: RegisterEvent) {
         when(event){
             is RegisterEvent.SignUpButtonClicked -> validateInputsAndRegister(event.nickname,event.email,event.password,event.repeatedPassword)
             RegisterEvent.LogInButtonClicked -> viewModelScope.launch {

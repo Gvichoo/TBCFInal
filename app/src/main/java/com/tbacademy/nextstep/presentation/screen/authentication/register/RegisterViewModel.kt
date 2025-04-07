@@ -47,13 +47,6 @@ class RegisterViewModel @Inject constructor(
 
             is RegisterEvent.Submit -> submitRegisterForm()
 
-            is RegisterEvent.OnSignUpBtnClicked -> validateForm(
-                event.nickname,
-                event.email,
-                event.password,
-                event.repeatedPassword
-            )
-
             is RegisterEvent.OnLogInBtnClicked -> viewModelScope.launch { emitEffect(RegisterEffect.NavToLogInFragment) }
         }
     }
@@ -141,7 +134,6 @@ class RegisterViewModel @Inject constructor(
             password = uiState.value.password,
             repeatedPassword = uiState.value.repeatedPassword
         )
-
 
         if (formIsValid) {
             registerUser(

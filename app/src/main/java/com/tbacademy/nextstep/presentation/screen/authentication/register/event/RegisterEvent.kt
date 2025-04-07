@@ -9,13 +9,6 @@ sealed interface RegisterEvent {
     data object PasswordVisibilityToggle: RegisterEvent
     data object RepeatedPasswordVisibilityToggle: RegisterEvent
 
-    data class OnSignUpBtnClicked(
-        val nickname: String,
-        val email: String,
-        val password: String,
-        val repeatedPassword: String
-    ) : RegisterEvent
-
     data object Submit: RegisterEvent
 
     data object OnLogInBtnClicked : RegisterEvent

@@ -50,7 +50,6 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
                 tlEmail.error = state.emailErrorMessage?.let { getString(it) }
 
                 tlPassword.error = state.passwordErrorMessage?.let { getString(it) }
-
                 tlRepeatPassword.error = state.repeatedPasswordErrorMessage?.let { getString(it) }
 
                 btnRegister.isEnabled = state.isSignUpEnabled
@@ -132,7 +131,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
     }
 
     private fun navToLoginFragment() {
-        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        findNavController().navigateUp()
     }
 
     private fun showMessage(message: String) {

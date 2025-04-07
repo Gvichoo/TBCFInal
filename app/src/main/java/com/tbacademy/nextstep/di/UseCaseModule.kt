@@ -2,6 +2,8 @@ package com.tbacademy.nextstep.di
 
 import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateNecessaryFieldUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.ValidateNecessaryFieldUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.validation.ValidatePasswordUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.ValidatePasswordUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.validation.ValidateRepeatedPasswordUseCase
@@ -32,4 +34,8 @@ interface UseCaseModule {
     @Singleton
     @Binds
     fun bindValidateUsernameUseCase(validateUsernameUseCase: ValidateUsernameUseCaseImpl): ValidateUsernameUseCase
+
+    @Singleton
+    @Binds
+    fun bindNecessaryFieldUseCase(validateNecessaryFieldUseCase: ValidateNecessaryFieldUseCaseImpl): ValidateNecessaryFieldUseCase
 }

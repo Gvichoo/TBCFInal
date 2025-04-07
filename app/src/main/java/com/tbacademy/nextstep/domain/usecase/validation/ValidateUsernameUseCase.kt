@@ -24,6 +24,5 @@ class ValidateUsernameUseCaseImpl @Inject constructor(): ValidateUsernameUseCase
                 InputValidationResult.Success
             }
         }
-
     }
 }

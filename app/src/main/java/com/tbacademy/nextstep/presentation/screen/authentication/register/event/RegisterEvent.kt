@@ -6,8 +6,6 @@ sealed interface RegisterEvent {
     data class PasswordChanged(val password: String) : RegisterEvent
     data class RepeatedPasswordChanged(val repeatedPassword: String) :
         RegisterEvent
-    data object PasswordVisibilityToggle: RegisterEvent
-    data object RepeatedPasswordVisibilityToggle: RegisterEvent
 
     data object Submit: RegisterEvent
 

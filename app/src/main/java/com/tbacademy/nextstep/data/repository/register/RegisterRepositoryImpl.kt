@@ -2,13 +2,15 @@ package com.tbacademy.nextstep.data.repository.register
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tbacademy.nextstep.data.common.mapper.toApiError
+import com.tbacademy.nextstep.domain.core.ApiError
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.model.User
 import com.tbacademy.nextstep.domain.repository.register.RegisterRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 class RegisterRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
@@ -25,7 +27,7 @@ class RegisterRepositoryImpl @Inject constructor(
                 .await()
 
             if (!usernameQuery.isEmpty) {
-                emit(Resource.Error("Username already taken"))
+                emit(Resource.Error(error = ApiError.UserAlreadyExists))
                 return@flow
             }
 
@@ -39,10 +41,12 @@ class RegisterRepositoryImpl @Inject constructor(
 
                 emit(Resource.Success(true))
             } else {
-                emit(Resource.Error("User creation failed"))
+                emit(Resource.Error(ApiError.ServiceUnavailable))
             }
         } catch (e: Exception) {
-            emit(Resource.Error("Sign-up failed: ${e.message}"))
+            emit(Resource.Error(e.toApiError()))
+        } finally {
+            emit(Resource.Loading(loading = false))
         }
     }
 }

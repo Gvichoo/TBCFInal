@@ -3,21 +3,19 @@ package com.tbacademy.nextstep.presentation.screen.authentication.register
 import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.core.InputValidationResult
-import com.tbacademy.nextstep.domain.core.getErrorMessageResId
 import com.tbacademy.nextstep.domain.usecase.register.RegisterUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.ValidateUsernameUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.ValidatePasswordUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.ValidateRepeatedPasswordUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCase
 import com.tbacademy.nextstep.presentation.base.BaseViewModel
+import com.tbacademy.nextstep.presentation.common.mapper.toMessageRes
+import com.tbacademy.nextstep.presentation.extension.getErrorMessageResId
 import com.tbacademy.nextstep.presentation.screen.authentication.register.effect.RegisterEffect
 import com.tbacademy.nextstep.presentation.screen.authentication.register.event.RegisterEvent
 import com.tbacademy.nextstep.presentation.screen.authentication.register.state.RegisterState
 import com.tbacademy.nextstep.presentation.screen.authentication.register.state.RegisterUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,22 +26,16 @@ class RegisterViewModel @Inject constructor(
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val validateRepeatedPasswordUseCase: ValidateRepeatedPasswordUseCase,
     private val registerUseCase: RegisterUseCase,
-) : BaseViewModel<RegisterState, RegisterEvent, RegisterEffect>(RegisterState()) {
-
-    private val _uiState = MutableStateFlow(RegisterUiState())
-    val uiState: StateFlow<RegisterUiState> get() = _uiState
-
-
+) : BaseViewModel<RegisterState, RegisterEvent, RegisterEffect, RegisterUiState>(
+    initialState = RegisterState(),
+    initialUiState = RegisterUiState()
+) {
     override fun onEvent(event: RegisterEvent) {
         when (event) {
-
             is RegisterEvent.UsernameChanged -> onUsernameChanged(username = event.username)
             is RegisterEvent.EmailChanged -> onEmailChanged(email = event.email)
             is RegisterEvent.PasswordChanged -> onPasswordChanged(password = event.password)
             is RegisterEvent.RepeatedPasswordChanged -> onRepeatedPasswordChanged(repeatedPassword = event.repeatedPassword)
-
-            is RegisterEvent.PasswordVisibilityToggle -> onPasswordVisibilityToggle()
-            is RegisterEvent.RepeatedPasswordVisibilityToggle -> onRepeatedPasswordVisibilityToggle()
 
             is RegisterEvent.Submit -> submitRegisterForm()
 
@@ -51,8 +43,9 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+    // On Username Update
     private fun onUsernameChanged(username: String) {
-        _uiState.update { it.copy(username = username) }
+        updateUiState { this.copy(username = username) }
 
         val usernameValidationResult =
             validateInputOnChange { validateUsernameUseCase(username = username) }
@@ -60,20 +53,21 @@ class RegisterViewModel @Inject constructor(
         updateState { this.copy(usernameErrorMessage = usernameErrorMessage) }
     }
 
+    // On Email Update
     private fun onEmailChanged(email: String) {
-        _uiState.update { it.copy(email = email) }
+        updateUiState { this.copy(email = email) }
 
         val emailValidationResult = validateInputOnChange { validateEmailUseCase(email = email) }
         val emailErrorMessage: Int? = emailValidationResult?.getErrorMessageResId()
         updateState { this.copy(emailErrorMessage = emailErrorMessage) }
     }
 
+    // On Password Update
     private fun onPasswordChanged(password: String) {
-        _uiState.update { it.copy(password = password) }
+        updateUiState { this.copy(password = password) }
 
         val passwordValidationResult =
             validateInputOnChange { validatePasswordUseCase(password = password) }
-
         val repeatedPasswordValidationResult = validateInputOnChange {
             validateRepeatedPasswordUseCase(
                 repeatedPassword = uiState.value.repeatedPassword,
@@ -93,8 +87,9 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+    // On Repeated Password Update
     private fun onRepeatedPasswordChanged(repeatedPassword: String) {
-        _uiState.update { it.copy(repeatedPassword = repeatedPassword) }
+        updateUiState { this.copy(repeatedPassword = repeatedPassword) }
 
         val repeatedPasswordValidationResult = validateInputOnChange {
             validateRepeatedPasswordUseCase(
@@ -102,7 +97,6 @@ class RegisterViewModel @Inject constructor(
                 password = uiState.value.password
             )
         }
-
         val passwordValidationResult =
             validateInputOnChange { validatePasswordUseCase(password = uiState.value.password) }
 
@@ -118,14 +112,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    private fun onPasswordVisibilityToggle() {
-        _uiState.update { it.copy(isPasswordVisible = !uiState.value.isPasswordVisible) }
-    }
-
-    private fun onRepeatedPasswordVisibilityToggle() {
-        _uiState.update { it.copy(isRepeatedPasswordVisible = !uiState.value.isRepeatedPasswordVisible) }
-    }
-
+    // On Submit
     private fun submitRegisterForm() {
 
         val formIsValid = validateForm(
@@ -142,11 +129,11 @@ class RegisterViewModel @Inject constructor(
                 password = uiState.value.password,
             )
         } else {
-            updateState { this.copy(isFormSubmitted = true) }
+            updateState { this.copy(formBeenSubmitted = true) }
         }
     }
 
-
+    // Form Validation
     private fun validateForm(
         username: String,
         email: String,
@@ -182,14 +169,13 @@ class RegisterViewModel @Inject constructor(
         return errors.all { it == null }
     }
 
+    // Data Call
     private fun registerUser(username: String, email: String, password: String) {
-        updateState { copy(isLoading = true) }
         viewModelScope.launch {
             registerUseCase(username, email, password).collect { result ->
                 when (result) {
                     is Resource.Error -> {
-                        updateState { copy(isLoading = false) }
-                        emitEffect(RegisterEffect.ShowError(result.errorMessage))
+                        emitEffect(RegisterEffect.ShowError(result.error.toMessageRes()))
                     }
 
                     is Resource.Loading -> {
@@ -197,7 +183,7 @@ class RegisterViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        updateState { copy(isLoading = false, isSuccess = true) }
+                        updateState { copy(isSuccess = true) }
                         emitEffect(RegisterEffect.NavToLogInFragment)
                     }
                 }
@@ -207,7 +193,7 @@ class RegisterViewModel @Inject constructor(
 
     // Helpers
     private fun validateInputOnChange(validator: () -> InputValidationResult): InputValidationResult? {
-        return if (state.value.isFormSubmitted)
+        return if (state.value.formBeenSubmitted)
             validator()
         else null
     }

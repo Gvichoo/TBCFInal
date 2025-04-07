@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="body_regular">16sp</dimen>
+    <dimen name="btn_vertical_padding">12dp</dimen>
+    <dimen name="title_regular">36sp</dimen>
+    <dimen name="pd_screen_horizontal">24dp</dimen>
+    <dimen name="distance_md">24dp</dimen>
+</resources>

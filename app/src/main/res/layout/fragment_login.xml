@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="24dp"
+    android:paddingHorizontal="@dimen/pd_screen_horizontal"
     tools:context=".presentation.screen.login.LoginFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:text="@string/log_in"
-        android:textSize="36sp"
+        android:textSize="@dimen/title_regular"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,7 @@
         android:id="@+id/tlEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/distance_md"
         android:hint="@string/email"
         app:layout_constraintTop_toBottomOf="@id/tvTitle">
 
@@ -39,7 +39,7 @@
         android:id="@+id/tlPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/distance_md"
         android:hint="@string/password"
         app:layout_constraintTop_toBottomOf="@id/tlEmail">
 
@@ -52,34 +52,56 @@
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/cbRememberMe"
-        app:layout_constraintStart_toStartOf="@id/tlPassword"
-        app:layout_constraintTop_toBottomOf="@id/tlPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/remember_me"
         android:textSize="14sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        app:layout_constraintStart_toStartOf="@id/tlPassword"
+        app:layout_constraintTop_toBottomOf="@id/tlPassword" />
 
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:paddingVertical="@dimen/btn_vertical_padding"
         android:text="@string/log_in"
         android:textAllCaps="false"
-        android:textSize="16sp"
+        android:textSize="@dimen/body_regular"
         app:layout_constraintTop_toBottomOf="@id/cbRememberMe" />
+
+    <!--  To be implemented  -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGoogleSignIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/distance_md"
+        android:textSize="@dimen/body_regular"
+        android:backgroundTint="@android:color/transparent"
+        android:paddingVertical="@dimen/btn_vertical_padding"
+        android:text="@string/continue_with_google"
+        android:textAllCaps="false"
+        android:textColor="@color/md_theme_primary"
+        app:icon="@drawable/ic_google"
+        app:iconGravity="textStart"
+        app:iconTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnLogin"
+        app:strokeColor="@color/md_theme_primary"
+        app:strokeWidth="2dp" />
 
     <LinearLayout
         android:id="@+id/LayoutSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/distance_md"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnLogin">
+        app:layout_constraintTop_toBottomOf="@id/btnGoogleSignIn">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvHaveAccount"
@@ -87,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:text="@string/don_t_have_an_account"
-            android:textSize="14sp" />
+            android:textSize="@dimen/body_regular" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/btnRegister"
@@ -96,8 +118,8 @@
             android:clickable="true"
             android:focusable="true"
             android:text="@string/sign_up_underline"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="14sp" />
+            android:textColor="@color/md_theme_primary"
+            android:textSize="@dimen/body_regular" />
     </LinearLayout>
 
 

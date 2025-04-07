@@ -39,7 +39,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
 
     private fun setRegisterButtonClickListener(){
         binding.btnRegister.setOnClickListener {
-            val nickname = binding.etNickName.text.toString().trim()
+            val nickname = binding.etUserName.text.toString().trim()
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
             val passwordRepeated = binding.etRepeatPassword.text.toString().trim()

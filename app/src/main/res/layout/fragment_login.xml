@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey"
     android:paddingHorizontal="24dp"
     tools:context=".presentation.screen.login.LoginFragment">
 
@@ -13,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="Log In"
+        android:text="@string/log_in"
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +60,7 @@
         android:layout_height="wrap_content" />
 
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -88,7 +87,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:text="@string/don_t_have_an_account"
-            android:textColor="@color/black"
             android:textSize="14sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -97,8 +95,8 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
-            android:text="@string/sign_up"
-            android:textColor="@color/design_default_color_background"
+            android:text="@string/sign_up_underline"
+            android:textColor="?attr/colorPrimary"
             android:textSize="14sp" />
     </LinearLayout>
 

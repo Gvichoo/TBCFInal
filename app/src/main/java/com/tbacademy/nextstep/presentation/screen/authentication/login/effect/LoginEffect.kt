@@ -1,4 +1,4 @@
-package com.tbacademy.nextstep.presentation.screen.login.effect
+package com.tbacademy.nextstep.presentation.screen.authentication.login.effect
 
 sealed interface LoginEffect {
 

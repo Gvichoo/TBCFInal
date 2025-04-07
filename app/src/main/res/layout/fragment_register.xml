@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/pd_screen_horizontal"
-    tools:context=".presentation.screen.register.RegisterFragment">
+    tools:context=".presentation.screen.authentication.register.RegisterFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvTitle"
@@ -23,12 +22,13 @@
         android:id="@+id/tlUserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/pd_screen_horizontal"
         android:layout_marginTop="@dimen/distance_md"
         android:hint="@string/username"
         app:layout_constraintTop_toBottomOf="@id/tvTitle">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etUserName"
+            android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress" />
@@ -36,10 +36,12 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tlEmail"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/distance_md"
         android:hint="@string/email"
+        app:layout_constraintEnd_toEndOf="@id/tlUserName"
+        app:layout_constraintStart_toStartOf="@id/tlUserName"
         app:layout_constraintTop_toBottomOf="@id/tlUserName">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -51,11 +53,14 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tlPassword"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/distance_md"
         android:hint="@string/password"
-        app:layout_constraintTop_toBottomOf="@id/tlEmail">
+        app:layout_constraintEnd_toEndOf="@id/tlUserName"
+        app:layout_constraintStart_toStartOf="@id/tlUserName"
+        app:layout_constraintTop_toBottomOf="@id/tlEmail"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"
@@ -66,11 +71,14 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tlRepeatPassword"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/distance_md"
         android:hint="@string/repeat_password"
-        app:layout_constraintTop_toBottomOf="@id/tlPassword">
+        app:layout_constraintEnd_toEndOf="@id/tlUserName"
+        app:layout_constraintStart_toStartOf="@id/tlUserName"
+        app:layout_constraintTop_toBottomOf="@id/tlPassword"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etRepeatPassword"
@@ -79,28 +87,18 @@
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnRegister"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/distance_md"
         android:paddingVertical="@dimen/btn_vertical_padding"
         android:text="@string/register"
         android:textAllCaps="false"
         android:textSize="@dimen/body_regular"
+        app:layout_constraintEnd_toEndOf="@id/tlUserName"
+        app:layout_constraintStart_toStartOf="@id/tlUserName"
         app:layout_constraintTop_toBottomOf="@id/tlRepeatPassword" />
-
-
-    <ProgressBar
-        android:id="@+id/loader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/btnLogin"
@@ -115,5 +113,9 @@
         app:layout_constraintEnd_toEndOf="@id/btnRegister"
         app:layout_constraintStart_toStartOf="@id/btnRegister"
         app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+    <include
+        android:id="@+id/loader"
+        layout="@layout/loader" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

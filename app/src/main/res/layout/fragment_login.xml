@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="@dimen/pd_screen_horizontal"
-    tools:context=".presentation.screen.login.LoginFragment">
+    tools:context=".presentation.screen.authentication.login.LoginFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvTitle"

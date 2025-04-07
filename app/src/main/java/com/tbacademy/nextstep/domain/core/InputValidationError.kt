@@ -2,7 +2,7 @@ package com.tbacademy.nextstep.domain.core
 
 import com.tbacademy.nextstep.R
 
-sealed class InputValidationError(val errorMessageResId: Any) {
+sealed class InputValidationError(val errorMessageResId: Int) {
     // General
     data object Empty : InputValidationError(R.string.field_is_empty)
     // Email

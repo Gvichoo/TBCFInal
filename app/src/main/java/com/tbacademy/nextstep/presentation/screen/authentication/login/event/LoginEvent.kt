@@ -1,4 +1,4 @@
-package com.tbacademy.nextstep.presentation.screen.login.event
+package com.tbacademy.nextstep.presentation.screen.authentication.login.event
 
 
 sealed class LoginEvent {

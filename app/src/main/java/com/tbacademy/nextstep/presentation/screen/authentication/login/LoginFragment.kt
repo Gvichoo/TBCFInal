@@ -1,4 +1,4 @@
-package com.tbacademy.nextstep.presentation.screen.login
+package com.tbacademy.nextstep.presentation.screen.authentication.login
 
 import android.view.View
 import android.widget.Toast
@@ -10,8 +10,8 @@ import com.tbacademy.nextstep.databinding.FragmentLoginBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
 import com.tbacademy.nextstep.presentation.extension.collect
 import com.tbacademy.nextstep.presentation.extension.collectLatest
-import com.tbacademy.nextstep.presentation.screen.login.effect.LoginEffect
-import com.tbacademy.nextstep.presentation.screen.login.event.LoginEvent
+import com.tbacademy.nextstep.presentation.screen.authentication.login.effect.LoginEffect
+import com.tbacademy.nextstep.presentation.screen.authentication.login.event.LoginEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,11 +34,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     override fun listeners() {
-        TODO("Not yet implemented")
     }
 
     override fun observers() {
-        TODO("Not yet implemented")
     }
 
     private fun logInButtonClicked(){
@@ -57,7 +55,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun observeState(){
-        collect(loginViewModel.viewState){
+        collect(loginViewModel.state){
             binding.loader.visibility = if (it.isLoading) View.VISIBLE else View.GONE
         }
     }

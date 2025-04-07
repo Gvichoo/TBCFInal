@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 abstract class BaseViewModel<STATE, EVENT, EFFECT>(
-    initialState: STATE
+    initialState: STATE,
 ) : ViewModel() {
 
-    private val _viewState = MutableStateFlow(initialState)
-    val viewState: StateFlow<STATE> get() = _viewState
+    private val _state = MutableStateFlow(initialState)
+    val state: StateFlow<STATE> get() = _state
 
     private val _effects = MutableSharedFlow<EFFECT>()
     val effects get() = _effects.asSharedFlow()
@@ -23,7 +23,6 @@ abstract class BaseViewModel<STATE, EVENT, EFFECT>(
     }
 
     protected fun updateState(editor: STATE.() -> STATE) {
-        _viewState.value = editor(_viewState.value)
+        _state.value = editor(_state.value)
     }
-
 }

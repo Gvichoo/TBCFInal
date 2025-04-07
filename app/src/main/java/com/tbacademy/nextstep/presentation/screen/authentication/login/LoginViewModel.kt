@@ -1,4 +1,4 @@
-package com.tbacademy.nextstep.presentation.screen.login
+package com.tbacademy.nextstep.presentation.screen.authentication.login
 
 import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.domain.core.Resource
@@ -7,9 +7,9 @@ import com.tbacademy.nextstep.domain.usecase.login.LoginUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.validation.ValidatePasswordUseCase
 import com.tbacademy.nextstep.presentation.base.BaseViewModel
-import com.tbacademy.nextstep.presentation.screen.login.effect.LoginEffect
-import com.tbacademy.nextstep.presentation.screen.login.event.LoginEvent
-import com.tbacademy.nextstep.presentation.screen.login.state.LoginState
+import com.tbacademy.nextstep.presentation.screen.authentication.login.effect.LoginEffect
+import com.tbacademy.nextstep.presentation.screen.authentication.login.event.LoginEvent
+import com.tbacademy.nextstep.presentation.screen.authentication.login.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +19,7 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val emailValidationUseCase: ValidateEmailUseCaseImpl,
     private val passwordValidationUseCase: ValidatePasswordUseCase
-) : BaseViewModel<LoginState,LoginEvent,LoginEffect>(LoginState()) {
+) : BaseViewModel<LoginState, LoginEvent, LoginEffect>(LoginState()) {
 
 
     override fun onEvent(event: LoginEvent) {

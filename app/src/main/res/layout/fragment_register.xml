@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.screen.authentication.register.RegisterFragment">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/sign_up"
+        android:textSize="@dimen/title_regular"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tlUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/pd_screen_horizontal"
+        android:layout_marginTop="@dimen/distance_md"
+        android:hint="@string/username"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tlEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/distance_md"
+        android:hint="@string/email"
+        app:layout_constraintEnd_toEndOf="@id/tlUserName"
+        app:layout_constraintStart_toStartOf="@id/tlUserName"
+        app:layout_constraintTop_toBottomOf="@id/tlUserName">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tlPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/distance_md"
+        android:hint="@string/password"
+        app:layout_constraintEnd_toEndOf="@id/tlUserName"
+        app:layout_constraintStart_toStartOf="@id/tlUserName"
+        app:layout_constraintTop_toBottomOf="@id/tlEmail"
+        app:passwordToggleContentDescription="@string/password_visibility_icon"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tlRepeatPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/distance_md"
+        android:hint="@string/repeat_password"
+        app:layout_constraintEnd_toEndOf="@id/tlUserName"
+        app:layout_constraintStart_toStartOf="@id/tlUserName"
+        app:layout_constraintTop_toBottomOf="@id/tlPassword"
+        app:passwordToggleContentDescription="@string/password_visibility_icon"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etRepeatPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRegister"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/distance_md"
+        android:paddingVertical="@dimen/btn_vertical_padding"
+        android:text="@string/register"
+        android:textAllCaps="false"
+        android:textSize="@dimen/body_regular"
+        app:layout_constraintEnd_toEndOf="@id/tlUserName"
+        app:layout_constraintStart_toStartOf="@id/tlUserName"
+        app:layout_constraintTop_toBottomOf="@id/tlRepeatPassword" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/btnLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/distance_md"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/i_already_have_an_account_underline"
+        android:textColor="@color/md_theme_primary"
+        android:textSize="@dimen/body_regular"
+        app:layout_constraintEnd_toEndOf="@id/btnRegister"
+        app:layout_constraintStart_toStartOf="@id/btnRegister"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+    <include
+        android:id="@+id/loaderRegister"
+        layout="@layout/loader" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "542027497505",
+    "project_id": "tbcfinalproject",
+    "storage_bucket": "tbcfinalproject.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542027497505:android:42b3ecc8dc0ec811f4a360",
+        "android_client_info": {
+          "package_name": "com.tbacademy.nextstep"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgX_EaJCRCe3P0njJdBW-Oi_y9IQNDMfo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

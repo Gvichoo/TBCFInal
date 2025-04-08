@@ -4,6 +4,8 @@ plugins {
     //Hilt
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    //Firebase
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -36,6 +38,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -46,6 +52,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.runtime.android)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -58,6 +66,29 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     //Glide
     implementation (libs.glide)
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    //FireStore
+    implementation("com.google.firebase:firebase-firestore")
+    //DataStore Preferences
+    implementation("androidx.datastore:datastore-preferences:1.1.4")
+    //FirebaseGoogle
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    implementation ("com.google.firebase:firebase-auth-ktx")
+    implementation ("com.google.android.gms:play-services-auth:21.3.0")
+
+    implementation ("com.google.firebase:firebase-auth-ktx:23.2.0")
+    // Google Identity Services
+    implementation ("com.google.android.gms:play-services-auth:21.3.0")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+
+
 
 
 

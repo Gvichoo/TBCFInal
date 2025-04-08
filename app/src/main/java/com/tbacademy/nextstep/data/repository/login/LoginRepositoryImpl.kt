@@ -10,7 +10,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class LoginRepositoryImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
 ) : LoginRepository {
     override fun login(email: String, password: String): Flow<Resource<Boolean>> = flow {
         emit(Resource.Loading(true))

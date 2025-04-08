@@ -1,7 +1,5 @@
 package com.tbacademy.nextstep.domain.core
 
-import com.tbacademy.nextstep.R
-
 sealed class InputValidationError {
     // General
     data object Empty : InputValidationError()

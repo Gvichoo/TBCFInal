@@ -1,5 +1,11 @@
 package com.tbacademy.nextstep.di
 
+import com.tbacademy.nextstep.domain.usecase.userSession.ClearValueFromLocalStorageUseCase
+import com.tbacademy.nextstep.domain.usecase.userSession.ClearValueFromLocalStorageUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.userSession.ReadValueFromLocalStorageUseCase
+import com.tbacademy.nextstep.domain.usecase.userSession.ReadValueFromLocalStorageUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.userSession.SaveValueToLocalStorageUseCase
+import com.tbacademy.nextstep.domain.usecase.userSession.SaveValueToLocalStorageUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.validation.ValidateNecessaryFieldUseCase
@@ -38,4 +44,16 @@ interface UseCaseModule {
     @Singleton
     @Binds
     fun bindNecessaryFieldUseCase(validateNecessaryFieldUseCase: ValidateNecessaryFieldUseCaseImpl): ValidateNecessaryFieldUseCase
+
+    @Singleton
+    @Binds
+    fun bindGetValueFromLocalStorageUseCase(impl: ReadValueFromLocalStorageUseCaseImpl) : ReadValueFromLocalStorageUseCase
+
+    @Singleton
+    @Binds
+    fun bindSaveValueToLocalStorageUseCase(impl : SaveValueToLocalStorageUseCaseImpl) : SaveValueToLocalStorageUseCase
+
+    @Singleton
+    @Binds
+    fun bindClearValueFromLocalStorageUseCase(impl : ClearValueFromLocalStorageUseCaseImpl) : ClearValueFromLocalStorageUseCase
 }

@@ -2,8 +2,10 @@ package com.tbacademy.nextstep.di
 
 import com.tbacademy.nextstep.data.repository.login.LoginRepositoryImpl
 import com.tbacademy.nextstep.data.repository.register.RegisterRepositoryImpl
+import com.tbacademy.nextstep.data.repository.userSession.UserSessionManagerRepositoryImpl
 import com.tbacademy.nextstep.domain.repository.login.LoginRepository
 import com.tbacademy.nextstep.domain.repository.register.RegisterRepository
+import com.tbacademy.nextstep.domain.repository.userSession.UserSessionManagerRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,4 +20,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindRegisterRepository(impl: RegisterRepositoryImpl): RegisterRepository
+
+    @Binds
+    abstract fun bindUserSessionManagerRepository(impl : UserSessionManagerRepositoryImpl) : UserSessionManagerRepository
 }

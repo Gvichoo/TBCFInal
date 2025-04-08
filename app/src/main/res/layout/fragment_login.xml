@@ -76,7 +76,6 @@
         app:layout_constraintStart_toStartOf="@id/tlEmail"
         app:layout_constraintTop_toBottomOf="@id/cbRememberMe" />
 
-    <!--  To be implemented  -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGoogleSignIn"
         android:layout_width="0dp"

@@ -22,14 +22,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     }
 
-    override fun listeners() {
-
-    }
-
-    override fun observers() {
-
-    }
-
+    override fun listeners() {}
+    override fun observers() {}
 
     private fun setUpBottomNavigationBar(){
         binding.bottomNavigationView.setOnItemSelectedListener {
@@ -57,7 +51,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
                 else -> false
             }
         }
-
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -65,5 +58,4 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             .replace(R.id.frameLayout, fragment)
             .commit()
     }
-
 }

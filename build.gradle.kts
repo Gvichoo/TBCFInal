@@ -6,4 +6,6 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.51.1" apply false
     //Firebase
     id("com.google.gms.google-services") version "4.4.2" apply false
+    // Navigation safe args
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin) apply false
 }

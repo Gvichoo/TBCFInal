@@ -2,11 +2,10 @@ package com.tbacademy.nextstep.presentation.screen.main.settings
 
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.databinding.FragmentSettingsBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
+import com.tbacademy.nextstep.presentation.screen.main.MainFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
@@ -21,7 +20,9 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
 
         binding.btnLogOut.setOnClickListener {
             mainViewModel.logOut()
-            findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
+            findNavController().navigate(
+                MainFragmentDirections.actionMainFragmentToLoginFragment()
+            )
         }
     }
 

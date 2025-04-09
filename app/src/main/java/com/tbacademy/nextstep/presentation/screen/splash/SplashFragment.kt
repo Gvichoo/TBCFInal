@@ -6,6 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.databinding.FragmentSplashBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
+import com.tbacademy.nextstep.presentation.extension.collect
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -15,29 +16,28 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
 
     private val splashViewModel: SplashViewModel by viewModels()
 
-    override fun start() {
-        checkSessionAndNavigate()
-    }
-
-    override fun listeners() {
-
-    }
+    override fun start() {}
+    override fun listeners() {}
 
     override fun observers() {
-
+        observeEffect()
     }
 
+    private fun observeEffect() {
+        collect(flow = splashViewModel.effect) { effect ->
+            when (effect) {
+                is SplashEffect.NavigateToLogin -> {
+                    findNavController().navigate(
+                        SplashFragmentDirections.actionSplashFragmentToLoginFragment()
+                    )
+                }
 
-    private fun checkSessionAndNavigate() {
-        lifecycleScope.launch {
-
-            val isRememberMeEnabled = splashViewModel.isRememberMeEnabled()
-            if (isRememberMeEnabled) {
-                findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
-            } else {
-                findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                is SplashEffect.NavigateToMain -> {
+                    findNavController().navigate(
+                        SplashFragmentDirections.actionSplashFragmentToMainFragment()
+                    )
+                }
             }
         }
     }
-
 }

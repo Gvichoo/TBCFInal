@@ -24,7 +24,7 @@ class UserSessionManagerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clear() {
-        datastore.edit { it.clear() }
+        datastore.edit { it.clear()
+        }
     }
-
 }

@@ -12,6 +12,7 @@ class ClearValueFromLocalStorageUseCaseImpl @Inject constructor(
 ) : ClearValueFromLocalStorageUseCase {
     override suspend fun invoke() {
         return userSessionManagerRepository.clear()
+
     }
 
 }

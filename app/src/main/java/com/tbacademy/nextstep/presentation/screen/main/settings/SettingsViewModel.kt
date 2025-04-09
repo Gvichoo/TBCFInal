@@ -9,13 +9,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val clearValueFromLocalStorageUseCase : ClearValueFromLocalStorageUseCase
+    private val clearValueFromLocalStorageUseCase : ClearValueFromLocalStorageUseCase,
 ) :ViewModel()  {
 
-    fun logOut(){
+    fun logOut() {
         viewModelScope.launch {
             clearValueFromLocalStorageUseCase()
         }
     }
+
 
 }

@@ -10,7 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
 
-    private val mainViewModel: SettingsViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
     override fun start() {
 
@@ -19,7 +19,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
     override fun listeners() {
 
         binding.btnLogOut.setOnClickListener {
-            mainViewModel.logOut()
+            settingsViewModel.logOut()
             findNavController().navigate(
                 MainFragmentDirections.actionMainFragmentToLoginFragment()
             )
@@ -28,4 +28,5 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
 
     override fun observers() {
     }
+
 }

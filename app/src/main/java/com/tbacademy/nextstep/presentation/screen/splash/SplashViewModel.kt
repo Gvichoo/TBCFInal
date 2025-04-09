@@ -1,5 +1,6 @@
 package com.tbacademy.nextstep.presentation.screen.splash
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.data.dataStore.PreferenceKey
@@ -31,6 +32,7 @@ class SplashViewModel @Inject constructor(
                     key = PreferenceKey.KEY_REMEMBER_ME,
                     value = false
                 ).first()
+            Log.d("Splashss", "Remember me flag is: $rememberMe")
 
             if (rememberMe)
                 _effect.send(SplashEffect.NavigateToMain)

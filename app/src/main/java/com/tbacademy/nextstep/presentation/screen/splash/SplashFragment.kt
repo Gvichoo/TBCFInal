@@ -1,14 +1,12 @@
 package com.tbacademy.nextstep.presentation.screen.splash
 
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.databinding.FragmentSplashBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
 import com.tbacademy.nextstep.presentation.extension.collect
+import com.tbacademy.nextstep.presentation.screen.splash.effect.SplashEffect
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 //Bla Bla Splash
 @AndroidEntryPoint

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.data.dataStore.PreferenceKey
 import com.tbacademy.nextstep.domain.usecase.userSession.ReadValueFromLocalStorageUseCase
+import com.tbacademy.nextstep.presentation.screen.splash.effect.SplashEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -40,6 +41,4 @@ class SplashViewModel @Inject constructor(
                 _effect.send(SplashEffect.NavigateToLogin)
         }
     }
-
-
 }

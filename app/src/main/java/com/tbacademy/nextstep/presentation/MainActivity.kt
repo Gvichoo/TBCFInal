@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.credentials.GetCredentialRequest
@@ -19,6 +20,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            view.setPadding(
+                view.paddingLeft,
+                systemBarsInsets.top,
+                view.paddingRight,
+                systemBarsInsets.bottom
+            )
+
+            WindowInsetsCompat.CONSUMED
+        }
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(binding.root)
     }
 }

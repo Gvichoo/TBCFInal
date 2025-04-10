@@ -1,11 +1,12 @@
 package com.tbacademy.nextstep.domain.model
 
+import com.google.firebase.Timestamp
 import java.util.Date
 
 data class Post(
     val id: String = "",
-    val authorId: String,
-    val referenceType: String, // "goal"
-    val referenceId: String,
+    val authorId: String = "",
+    val referenceType: String = "",
+    val referenceId: String = "",
     val createdAt: Date = Date()
 )

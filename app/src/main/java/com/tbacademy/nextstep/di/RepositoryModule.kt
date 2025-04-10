@@ -1,8 +1,10 @@
 package com.tbacademy.nextstep.di
 
+import com.tbacademy.nextstep.data.repository.goal.GoalRepositoryImpl
 import com.tbacademy.nextstep.data.repository.login.LoginRepositoryImpl
 import com.tbacademy.nextstep.data.repository.register.RegisterRepositoryImpl
 import com.tbacademy.nextstep.data.repository.userSession.UserSessionManagerRepositoryImpl
+import com.tbacademy.nextstep.domain.repository.goal.GoalRepository
 import com.tbacademy.nextstep.domain.repository.login.LoginRepository
 import com.tbacademy.nextstep.domain.repository.register.RegisterRepository
 import com.tbacademy.nextstep.domain.repository.userSession.UserSessionManagerRepository
@@ -23,4 +25,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindUserSessionManagerRepository(impl : UserSessionManagerRepositoryImpl) : UserSessionManagerRepository
+
+    @Binds
+    abstract fun bindGoalRepository(impl : GoalRepositoryImpl) : GoalRepository
 }

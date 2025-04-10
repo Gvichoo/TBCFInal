@@ -1,5 +1,7 @@
 package com.tbacademy.nextstep.di
 
+import com.tbacademy.nextstep.domain.usecase.goal.CreateGoalUseCase
+import com.tbacademy.nextstep.domain.usecase.goal.CreateGoalUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.userSession.ClearValueFromLocalStorageUseCase
 import com.tbacademy.nextstep.domain.usecase.userSession.ClearValueFromLocalStorageUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.userSession.ReadValueFromLocalStorageUseCase
@@ -56,4 +58,9 @@ interface UseCaseModule {
     @Singleton
     @Binds
     fun bindClearValueFromLocalStorageUseCase(impl : ClearValueFromLocalStorageUseCaseImpl) : ClearValueFromLocalStorageUseCase
+
+    @Singleton
+    @Binds
+    fun bindCreateGoalUseCase(impl : CreateGoalUseCaseImpl) : CreateGoalUseCase
+
 }

@@ -1,4 +1,4 @@
-package com.tbacademy.nextstep.domain.usecase.validation
+package com.tbacademy.nextstep.domain.usecase.validation.authorization
 
 import com.tbacademy.nextstep.domain.core.InputValidationError
 import com.tbacademy.nextstep.domain.core.InputValidationResult
@@ -9,7 +9,7 @@ interface ValidateEmailUseCase {
     operator fun invoke(email: String?): InputValidationResult
 }
 
-class ValidateEmailUseCaseImpl @Inject constructor(): ValidateEmailUseCase  {
+class ValidateEmailUseCaseImpl @Inject constructor(): ValidateEmailUseCase {
     private val emailRegex = compile(
         "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
                 "\\@" +

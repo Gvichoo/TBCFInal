@@ -1,4 +1,4 @@
-package com.tbacademy.nextstep.domain.usecase.validation
+package com.tbacademy.nextstep.domain.usecase.validation.authorization
 
 import com.tbacademy.nextstep.domain.core.InputValidationError
 import com.tbacademy.nextstep.domain.core.InputValidationResult

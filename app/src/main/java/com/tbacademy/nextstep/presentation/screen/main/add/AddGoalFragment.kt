@@ -3,10 +3,17 @@ package com.tbacademy.nextstep.presentation.screen.main.add
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.util.Log
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import com.tbacademy.nextstep.databinding.FragmentAddGoalBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
+import com.tbacademy.nextstep.presentation.extension.collect
+import com.tbacademy.nextstep.presentation.extension.collectLatest
 import com.tbacademy.nextstep.presentation.extension.getString
+import com.tbacademy.nextstep.presentation.extension.onTextChanged
+import com.tbacademy.nextstep.presentation.screen.main.add.effect.AddGoalEffect
+import com.tbacademy.nextstep.presentation.screen.main.add.event.AddGoalEvent
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import java.util.Date
@@ -23,11 +30,45 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
     override fun listeners() {
         setCreateGoalBtnListener()
+        setInputListeners()
+        setSignInBtnListener()
     }
 
     override fun observers() {
 
+        observeState()
+        observeEffects()
+
     }
+
+
+
+
+    private fun observeState(){
+        collect(addGoalViewModel.state){state ->
+           binding.apply {
+               loaderAddGoal.loaderContainer.isVisible = state.isLoading
+
+               tlGoalTitle.error = state.goalTitleErrorMessage?.let { getString(it) }
+               tlGoalDescription.error = state.goalDescriptionErrorMessage?.let { getString(it) }
+
+
+               btnCreateGoal.isEnabled = state.isCreateGoalEnabled
+           }
+        }
+    }
+
+    private fun observeEffects(){
+        collectLatest(addGoalViewModel.effects){effects ->
+            when(effects){
+                AddGoalEffect.NavToHomeFragment -> navToHomeFragment()
+                is AddGoalEffect.ShowError -> showMessage(effects.message)
+            }
+        }
+    }
+
+
+
 
     private fun setCreateGoalBtnListener() {
         binding.apply {
@@ -39,7 +80,6 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
                         goalDate = Date()
                     )
                 )
-                Log.d("CREATE_GOAL", "BTN_CLICKED")
             }
         }
     }
@@ -68,6 +108,45 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
             datePicker.datePicker.minDate = System.currentTimeMillis() + 24 * 60 * 60 * 1000
 
             datePicker.show()
+        }
+    }
+
+    private fun setInputListeners(){
+        setTitleInputListener()
+        setDescriptionInputListener()
+    }
+
+    private fun setTitleInputListener() {
+        binding.etGoalTitle.onTextChanged { title ->
+            addGoalViewModel.onEvent(AddGoalEvent.GoalTitleChanged(title = title))
+        }
+    }
+
+    private fun setDescriptionInputListener() {
+        binding.etGoalDescription.onTextChanged { description ->
+            addGoalViewModel.onEvent(AddGoalEvent.GoalDescriptionChanged(description = description))
+        }
+    }
+
+    private fun setSignInBtnListener() {
+        binding.btnCreateGoal.setOnClickListener {
+            addGoalViewModel.onEvent(AddGoalEvent.Submit)
+        }
+    }
+
+
+    private fun navToHomeFragment(){
+//        findNavController().navigate(
+//            AddGoalFragmentDirections.actionAddGoalFragmentToHomeFragment()
+//        )
+    }
+
+
+
+
+    private fun showMessage(message: Int) {
+        view?.let {
+            Snackbar.make(it, getString(message), Snackbar.LENGTH_SHORT).show()
         }
     }
 

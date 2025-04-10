@@ -9,5 +9,5 @@ sealed interface RegisterEvent {
 
     data object Submit: RegisterEvent
 
-    data object OnLogInBtnClicked : RegisterEvent
+    data object OnRegisterBtnClicked : RegisterEvent
 }

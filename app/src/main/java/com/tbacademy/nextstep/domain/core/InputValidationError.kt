@@ -16,4 +16,5 @@ sealed class InputValidationError {
     data object PasswordShort : InputValidationError()
     data object PasswordWeak : InputValidationError()
     data object PasswordsDoNotMatch : InputValidationError()
+
 }

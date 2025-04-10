@@ -9,7 +9,6 @@ interface ReadValueFromLocalStorageUseCase {
     operator fun <T> invoke(key: Preferences.Key<T>, value: T): Flow<T>
 }
 
-
 class ReadValueFromLocalStorageUseCaseImpl @Inject constructor(
     private val userSessionManagerRepository: UserSessionManagerRepository
 ) : ReadValueFromLocalStorageUseCase {

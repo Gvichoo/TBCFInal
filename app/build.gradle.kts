@@ -6,6 +6,8 @@ plugins {
     id("com.google.dagger.hilt.android")
     //Firebase
     id("com.google.gms.google-services")
+    // Navigation safe args
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
 
 android {
@@ -67,26 +69,24 @@ dependencies {
     //Glide
     implementation (libs.glide)
     //Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
     //FireStore
-    implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.firebase.firestore)
     //DataStore Preferences
-    implementation("androidx.datastore:datastore-preferences:1.1.4")
+    implementation(libs.androidx.datastore.preferences)
     //FirebaseGoogle
-    implementation("androidx.credentials:credentials:1.5.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
-    implementation ("com.google.firebase:firebase-auth-ktx")
-    implementation ("com.google.android.gms:play-services-auth:21.3.0")
+    implementation (libs.firebase.auth.ktx)
+    implementation (libs.play.services.auth)
 
-    implementation ("com.google.firebase:firebase-auth-ktx:23.2.0")
+    implementation (libs.google.firebase.auth.ktx)
     // Google Identity Services
-    implementation ("com.google.android.gms:play-services-auth:21.3.0")
-
-    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+    implementation (libs.play.services.auth)
 
 
 

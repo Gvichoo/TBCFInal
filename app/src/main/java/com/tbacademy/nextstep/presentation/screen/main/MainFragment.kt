@@ -13,13 +13,12 @@ import com.tbacademy.nextstep.presentation.screen.main.settings.SettingsFragment
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
 
     override fun start() {
-
-        replaceFragment(HomeFragment())
-
-        binding.bottomNavigationView.selectedItemId = R.id.nav_home
+        if (childFragmentManager.findFragmentById(R.id.frameLayout) == null) {
+            replaceFragment(HomeFragment())
+            binding.bottomNavigationView.selectedItemId = R.id.nav_home
+        }
 
         setUpBottomNavigationBar()
-
     }
 
     override fun listeners() {}

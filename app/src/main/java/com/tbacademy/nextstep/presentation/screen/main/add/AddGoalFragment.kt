@@ -10,13 +10,14 @@ import com.tbacademy.nextstep.databinding.FragmentAddGoalBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
 import com.tbacademy.nextstep.presentation.extension.collect
 import com.tbacademy.nextstep.presentation.extension.collectLatest
-import com.tbacademy.nextstep.presentation.extension.getString
 import com.tbacademy.nextstep.presentation.extension.onTextChanged
 import com.tbacademy.nextstep.presentation.screen.main.add.effect.AddGoalEffect
 import com.tbacademy.nextstep.presentation.screen.main.add.event.AddGoalEvent
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 @AndroidEntryPoint
 class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBinding::inflate) {
@@ -29,20 +30,18 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
     }
 
     override fun listeners() {
-        setCreateGoalBtnListener()
         setInputListeners()
-        setSignInBtnListener()
+        setSubmitBtnListener()
+        setSwitchListener()
     }
 
     override fun observers() {
 
         observeState()
         observeEffects()
+        observeUiState()
 
     }
-
-
-
 
     private fun observeState(){
         collect(addGoalViewModel.state){state ->
@@ -51,10 +50,22 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
                tlGoalTitle.error = state.goalTitleErrorMessage?.let { getString(it) }
                tlGoalDescription.error = state.goalDescriptionErrorMessage?.let { getString(it) }
+               tlTargetDate.error = state.goalDateErrorMessage?.let { getString(it) }
+               tlMetricUnit.error = state.goalMetricTargetErrorMessage?.let { getString(it) }
+               tlMetricTarget.error = state.goalMetricUnitErrorMessage?.let { getString(it) }
 
 
                btnCreateGoal.isEnabled = state.isCreateGoalEnabled
+
            }
+        }
+    }
+
+    private fun observeUiState(){
+        collect(addGoalViewModel.uiState){ uiState ->
+            binding.apply {
+                metricInputContainer.isVisible = uiState.isMetricEnabled
+            }
         }
     }
 
@@ -70,20 +81,6 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
 
 
-    private fun setCreateGoalBtnListener() {
-        binding.apply {
-            btnCreateGoal.setOnClickListener {
-                addGoalViewModel.onEvent(
-                    AddGoalEvent.CreateGoal(
-                        title = etGoalTitle.getString(),
-                        description = etGoalDescription.getString(),
-                        goalDate = Date()
-                    )
-                )
-            }
-        }
-    }
-
     @SuppressLint("DefaultLocale")
     private fun setDatePicker() {
         binding.etTargetDate.setOnClickListener {
@@ -94,26 +91,42 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
                     val formattedDate = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
                     binding.etTargetDate.setText(formattedDate)
 
-                    // Set selected date
                     calendar.set(year, month, dayOfMonth, 0, 0, 0)
                     calendar.set(Calendar.MILLISECOND, 0)
                     val date = calendar.time
+
+                    addGoalViewModel.onEvent(AddGoalEvent.GoalDateChanged(date))
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
             )
 
-            // ✅ Disallow today and past
             datePicker.datePicker.minDate = System.currentTimeMillis() + 24 * 60 * 60 * 1000
 
             datePicker.show()
         }
     }
 
+
     private fun setInputListeners(){
         setTitleInputListener()
         setDescriptionInputListener()
+        setDateInputListener()
+        setMetricTargetInputListener()
+        setMetricUnitInputListener()
+    }
+
+    private fun setMetricUnitInputListener(){
+        binding.etMetricUnit.onTextChanged { metricUnit ->
+            addGoalViewModel.onEvent(AddGoalEvent.GoalMetricUnitChanged(metricUnit = metricUnit))
+        }
+    }
+
+    private fun setMetricTargetInputListener(){
+        binding.etMetricTarget.onTextChanged { metricTarget ->
+            addGoalViewModel.onEvent(AddGoalEvent.GoalMetricTargetChanged(metricTarget = metricTarget.toInt()))
+        }
     }
 
     private fun setTitleInputListener() {
@@ -128,11 +141,41 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
         }
     }
 
-    private fun setSignInBtnListener() {
+    private fun setDateInputListener() {
+        binding.etTargetDate.onTextChanged { dateString ->
+            val parsedDate = parseDate(dateString)
+            if (parsedDate != null) {
+                addGoalViewModel.onEvent(AddGoalEvent.GoalDateChanged(date = parsedDate))
+            } else {
+                Log.e("AddGoalFragment", "Invalid date format: $dateString")
+            }
+        }
+    }
+
+
+
+    private fun parseDate(dateString: String): Date? {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return try {
+            dateFormat.parse(dateString)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun setSubmitBtnListener() {
         binding.btnCreateGoal.setOnClickListener {
             addGoalViewModel.onEvent(AddGoalEvent.Submit)
         }
     }
+
+    private fun setSwitchListener() {
+        binding.switchMetricBased.setOnCheckedChangeListener { _, isChecked ->
+            addGoalViewModel.onEvent(AddGoalEvent.MetricToggle(isChecked))
+        }
+    }
+
+
 
 
     private fun navToHomeFragment(){

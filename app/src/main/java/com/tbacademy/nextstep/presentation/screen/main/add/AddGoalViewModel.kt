@@ -1,18 +1,19 @@
 package com.tbacademy.nextstep.presentation.screen.main.add
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.domain.core.InputValidationResult
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.model.Goal
 import com.tbacademy.nextstep.domain.usecase.goal.CreateGoalUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalDateUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalDescriptionUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalTitleUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricTargetUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricUnitUseCase
 import com.tbacademy.nextstep.presentation.base.BaseViewModel
 import com.tbacademy.nextstep.presentation.common.mapper.toMessageRes
 import com.tbacademy.nextstep.presentation.extension.getErrorMessageResId
-import com.tbacademy.nextstep.presentation.screen.authentication.register.effect.RegisterEffect
 import com.tbacademy.nextstep.presentation.screen.main.add.effect.AddGoalEffect
 import com.tbacademy.nextstep.presentation.screen.main.add.event.AddGoalEvent
 import com.tbacademy.nextstep.presentation.screen.main.add.state.AddGoalState
@@ -26,7 +27,10 @@ import javax.inject.Inject
 class AddGoalViewModel @Inject constructor(
     private val createGoalUseCase: CreateGoalUseCase,
     private val validateTitleUseCase : ValidateAddGoalTitleUseCase,
-    private val validateDescriptionUseCase : ValidateAddGoalDescriptionUseCase
+    private val validateDescriptionUseCase : ValidateAddGoalDescriptionUseCase,
+    private val validateDateUseCase: ValidateAddGoalDateUseCase,
+    private val validateMetricTargetUseCase : ValidateMetricTargetUseCase,
+    private val validateMetricUnitUseCase: ValidateMetricUnitUseCase
 
 ) : BaseViewModel<AddGoalState,AddGoalEvent,AddGoalEffect,AddGoalUiState>(
     initialState = AddGoalState(),
@@ -38,14 +42,42 @@ class AddGoalViewModel @Inject constructor(
             is AddGoalEvent.CreateGoal -> createGoal(
                 title = event.title,
                 description = event.description,
-                targetDate = event.goalDate
+                targetDate = event.goalDate,
+                metricTarget = event.metricTarget,
+                metricUnit = event.metricUnit,
+                isMetricEnabled = event.isMetricEnabled
             )
             is AddGoalEvent.GoalDescriptionChanged -> onDescriptionChanged(description = event.description)
             is AddGoalEvent.GoalTitleChanged ->  onTitleChanged(title = event.title)
 
             AddGoalEvent.OnCreateGoalBtnClicked -> viewModelScope.launch { emitEffect(AddGoalEffect.NavToHomeFragment) }
             AddGoalEvent.Submit -> submitAddGoalForm()
+            is AddGoalEvent.GoalDateChanged ->  onDateChanged(date = event.date)
+            is AddGoalEvent.MetricToggle -> updateUiState { this.copy(isMetricEnabled = event.enabled) }
+            is AddGoalEvent.GoalMetricTargetChanged -> onMetricTargetChanged(metricTarget = event.metricTarget)
+            is AddGoalEvent.GoalMetricUnitChanged -> onMetricUnitChanged(metricUnit = event.metricUnit)
         }
+    }
+
+
+
+    //On Metric Unit Update
+    private fun onMetricUnitChanged(metricUnit : String ){
+        updateUiState { this.copy(metricUnit = metricUnit) }
+
+        val metricUnitValidationResult = validateInputOnChange { validateMetricUnitUseCase(metricUnit = metricUnit) }
+        val metricUnitErrorMessage: Int? = metricUnitValidationResult?.getErrorMessageResId()
+
+        updateState { this.copy(goalMetricUnitErrorMessage = metricUnitErrorMessage) }
+    }
+
+    //On Metric Target Update
+    private fun onMetricTargetChanged(metricTarget : Int){
+        updateUiState { this.copy(metricTarget = metricTarget) }
+
+        val metricTargetValidationResult = validateInputOnChange { validateMetricTargetUseCase(metricTarget = metricTarget) }
+        val metricTargetErrorMessage : Int? = metricTargetValidationResult?.getErrorMessageResId()
+        updateState { this.copy(goalMetricTargetErrorMessage = metricTargetErrorMessage) }
     }
 
     // On Title Update
@@ -66,6 +98,17 @@ class AddGoalViewModel @Inject constructor(
         updateState { this.copy(goalDescriptionErrorMessage = descriptionErrorMessage) }
     }
 
+    private fun onDateChanged(date: Date){
+        updateUiState { this.copy(goalDate = date) }
+
+        val dateValidationResult = validateInputOnChange { validateDateUseCase(date = date) }
+        val dateErrorMessage : Int? = dateValidationResult?.getErrorMessageResId()
+        updateState { this.copy(goalDateErrorMessage = dateErrorMessage) }
+    }
+
+
+
+
 
     // On Submit
     private fun submitAddGoalForm() {
@@ -73,6 +116,10 @@ class AddGoalViewModel @Inject constructor(
         val formIsValid = validateForm(
             title = uiState.value.title,
             description = uiState.value.description,
+            goalDate = uiState.value.goalDate,
+            metricUnit = uiState.value.metricUnit,
+            metricTarget = uiState.value.metricTarget,
+            isMetricEnabled = uiState.value.isMetricEnabled
         )
 
         if (formIsValid) {
@@ -81,11 +128,15 @@ class AddGoalViewModel @Inject constructor(
                     title = uiState.value.title,
                     description = uiState.value.description,
                     targetDate = it,
+                    metricUnit = uiState.value.metricUnit,
+                    metricTarget = uiState.value.metricTarget,
+                    isMetricEnabled = uiState.value.isMetricEnabled
                 )
             }
-        } else {
+        }else {
             updateState { this.copy(formBeenSubmitted = true) }
         }
+        Log.d("SUBMIT_FORM", "Title: ${uiState.value.title}, Desc: ${uiState.value.description}, Date: ${uiState.value.goalDate}")
     }
 
 
@@ -93,25 +144,47 @@ class AddGoalViewModel @Inject constructor(
 
     private fun validateForm(
         title: String,
-        description: String
+        description: String,
+        goalDate : Date?,
+        metricUnit: String,
+        metricTarget: Int,
+        isMetricEnabled: Boolean
+
     ): Boolean {
 
         // Validate Inputs
         val titleValidationError = validateTitleUseCase(title = title).getErrorMessageResId()
         val descriptionValidationForm = validateDescriptionUseCase(description = description).getErrorMessageResId()
+        val dateValidationError = validateDateUseCase(date = goalDate).getErrorMessageResId()
+
+        var metricUnitError: Int? = null
+        var metricTargetError: Int? = null
+
+        if (isMetricEnabled) {
+            metricUnitError = validateMetricUnitUseCase(metricUnit = metricUnit).getErrorMessageResId()
+            metricTargetError = validateMetricTargetUseCase(metricTarget = metricTarget).getErrorMessageResId()
+        }
+
 
         // Update states of errors
         updateState {
             copy(
                 goalTitleErrorMessage = titleValidationError,
                 goalDescriptionErrorMessage = descriptionValidationForm,
+                goalDateErrorMessage = dateValidationError,
+                goalMetricUnitErrorMessage = metricUnitError,
+                goalMetricTargetErrorMessage = metricTargetError
             )
         }
+
 
         // Check if form if valid
         val errors: List<Int?> = listOf(
             titleValidationError,
-            descriptionValidationForm
+            descriptionValidationForm,
+            dateValidationError,
+            if (isMetricEnabled) metricUnitError else null,
+            if (isMetricEnabled) metricTargetError else null
         )
 
         return errors.all { it == null }
@@ -128,15 +201,21 @@ class AddGoalViewModel @Inject constructor(
     private fun createGoal(
         title: String,
         description: String,
-        targetDate: Date
+        targetDate: Date,
+        metricUnit: String,
+        metricTarget: Int,
+        isMetricEnabled: Boolean
     ) {
         viewModelScope.launch {
             val newGoal = Goal(
                 title = title,
                 description = description,
-                targetDate = targetDate
+                targetDate = targetDate,
+                metricUnit = if (isMetricEnabled) metricUnit else null,
+                metricTarget = if (isMetricEnabled) metricTarget else null
             )
             createGoalUseCase(
+
                 goal = newGoal
             ).collect { result ->
                 when(result){

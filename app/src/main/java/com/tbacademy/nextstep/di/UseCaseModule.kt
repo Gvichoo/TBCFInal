@@ -8,6 +8,8 @@ import com.tbacademy.nextstep.domain.usecase.userSession.ReadValueFromLocalStora
 import com.tbacademy.nextstep.domain.usecase.userSession.ReadValueFromLocalStorageUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.userSession.SaveValueToLocalStorageUseCase
 import com.tbacademy.nextstep.domain.usecase.userSession.SaveValueToLocalStorageUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalDateUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalDateUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalDescriptionUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalDescriptionUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateEmailUseCase
@@ -22,6 +24,10 @@ import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateUs
 import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateUsernameUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalTitleUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalTitleUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricTargetUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricTargetUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricUnitUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricUnitUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -75,4 +81,15 @@ interface UseCaseModule {
     @Binds
     fun bindValidateAddGoalDescriptionUseCase(impl : ValidateAddGoalDescriptionUseCaseImpl) : ValidateAddGoalDescriptionUseCase
 
+    @Singleton
+    @Binds
+    fun bindValidateAddGoalDateUseCase(impl : ValidateAddGoalDateUseCaseImpl) : ValidateAddGoalDateUseCase
+
+    @Singleton
+    @Binds
+    fun bindValidateMetricTargetUseCase(impl : ValidateMetricTargetUseCaseImpl) : ValidateMetricTargetUseCase
+
+    @Singleton
+    @Binds
+    fun bindValidateMetricUnitUseCase(impl : ValidateMetricUnitUseCaseImpl) : ValidateMetricUnitUseCase
 }

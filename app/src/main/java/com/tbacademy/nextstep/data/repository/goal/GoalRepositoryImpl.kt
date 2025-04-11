@@ -21,7 +21,7 @@ class GoalRepositoryImpl @Inject constructor(
 ): GoalRepository {
     override suspend fun createGoal(goal: Goal): Flow<Resource<Boolean>> = flow {
         emit(Resource.Loading(loading = true))
-        Log.d("CREATE_GOAL", "Loading: true")
+        Log.d("REPOsss", "Started creating goal")
         try {
             val currentUser = firebaseAuth.currentUser
             if (currentUser == null) {

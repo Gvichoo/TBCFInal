@@ -13,5 +13,6 @@ fun InputValidationError.toErrorMessageRes(): Int {
         InputValidationError.PasswordShort -> R.string.password_should_be_at_least_8_characters
         InputValidationError.PasswordWeak -> R.string.password_must_contain_at_least_one_letter_and_one_digit
         InputValidationError.PasswordsDoNotMatch -> R.string.passwords_do_not_match
+        InputValidationError.Invalid -> R.string.invalid_format
     }
 }

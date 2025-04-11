@@ -3,6 +3,7 @@ package com.tbacademy.nextstep.domain.core
 sealed class InputValidationError {
     // General
     data object Empty : InputValidationError()
+    data object Invalid : InputValidationError()
 
     // Email
     data object InvalidEmailFormat : InputValidationError()

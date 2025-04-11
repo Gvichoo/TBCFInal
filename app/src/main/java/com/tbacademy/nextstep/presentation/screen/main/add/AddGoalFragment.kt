@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.util.Log
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.tbacademy.nextstep.databinding.FragmentAddGoalBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
@@ -179,9 +180,9 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
 
     private fun navToHomeFragment(){
-//        findNavController().navigate(
-//            AddGoalFragmentDirections.actionAddGoalFragmentToHomeFragment()
-//        )
+        findNavController().navigate(
+            AddGoalFragmentDirections.actionAddGoalFragmentToHomeFragment()
+        )
     }
 
 

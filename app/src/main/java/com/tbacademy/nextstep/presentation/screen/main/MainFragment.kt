@@ -13,8 +13,8 @@ import com.tbacademy.nextstep.presentation.screen.main.settings.SettingsFragment
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
 
     override fun start() {
-        if (childFragmentManager.findFragmentById(R.id.frameLayout) == null) {
-            replaceFragment(HomeFragment())
+        if (childFragmentManager.findFragmentById(R.id.main_nav_graph) == null) {
+//            replaceFragment(HomeFragment())
             binding.bottomNavigationView.selectedItemId = R.id.nav_home
         }
 
@@ -54,7 +54,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     private fun replaceFragment(fragment: Fragment) {
         childFragmentManager.beginTransaction()
-            .replace(R.id.frameLayout, fragment)
+            .replace(R.id.main_nav_graph, fragment)
             .commit()
     }
 }

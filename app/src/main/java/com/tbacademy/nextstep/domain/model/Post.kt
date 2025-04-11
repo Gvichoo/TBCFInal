@@ -1,6 +1,5 @@
 package com.tbacademy.nextstep.domain.model
 
-import com.google.firebase.Timestamp
 import java.util.Date
 
 data class Post(

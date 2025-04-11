@@ -4,10 +4,10 @@ import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.core.InputValidationResult
 import com.tbacademy.nextstep.domain.usecase.register.RegisterUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.ValidateUsernameUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.ValidatePasswordUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.ValidateRepeatedPasswordUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateUsernameUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidatePasswordUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateRepeatedPasswordUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateEmailUseCase
 import com.tbacademy.nextstep.presentation.base.BaseViewModel
 import com.tbacademy.nextstep.presentation.common.mapper.toMessageRes
 import com.tbacademy.nextstep.presentation.extension.getErrorMessageResId
@@ -39,7 +39,7 @@ class RegisterViewModel @Inject constructor(
 
             is RegisterEvent.Submit -> submitRegisterForm()
 
-            is RegisterEvent.OnLogInBtnClicked -> viewModelScope.launch { emitEffect(RegisterEffect.NavToLogInFragment) }
+            is RegisterEvent.OnRegisterBtnClicked -> viewModelScope.launch { emitEffect(RegisterEffect.NavToLogInFragment) }
         }
     }
 

@@ -73,7 +73,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
 
     private fun setSignInBtnListener() {
         binding.btnLogin.setOnClickListener {
-            registerViewModel.onEvent(RegisterEvent.OnLogInBtnClicked)
+            registerViewModel.onEvent(RegisterEvent.OnRegisterBtnClicked)
         }
     }
 

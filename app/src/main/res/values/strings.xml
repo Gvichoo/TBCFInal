@@ -45,6 +45,7 @@
     <string name="error_user_not_found">User does not exist. Please check your credentials.</string>
     <string name="error_invalid_credentials">Invalid credentials. Please try again.</string>
     <string name="error_user_already_exists">User already exists. Please use a different email.</string>
+    <string name="invalid_format">Invalid format</string>
 
     <string name="default_web_client_id">542027497505-bia3eg08098is83l6nih4dimgn6ohj3k.apps.googleusercontent.com</string>
     <string name="paul_sheldon_goal">After a devastating car crash in the Colorado mountains, I’ve found myself isolated with no choice but to resurrect a character I already said goodbye to — Misery Chastain. My number one fan insists this book be written… or else.</string>

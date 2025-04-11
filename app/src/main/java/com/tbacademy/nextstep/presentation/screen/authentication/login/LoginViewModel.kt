@@ -7,8 +7,8 @@ import com.tbacademy.nextstep.domain.core.InputValidationResult
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.usecase.login.LoginUseCase
 import com.tbacademy.nextstep.domain.usecase.userSession.SaveValueToLocalStorageUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.ValidateEmailUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.ValidateNecessaryFieldUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateEmailUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateNecessaryFieldUseCase
 import com.tbacademy.nextstep.presentation.base.BaseViewModel
 import com.tbacademy.nextstep.presentation.common.mapper.toMessageRes
 import com.tbacademy.nextstep.presentation.extension.getErrorMessageResId
@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(
     private val validateNecessaryFieldUseCase: ValidateNecessaryFieldUseCase,
     private val saveValueToLocalStorageUseCase: SaveValueToLocalStorageUseCase,
 
-) : BaseViewModel<LoginState, LoginEvent, LoginEffect, LoginUiState>(
+    ) : BaseViewModel<LoginState, LoginEvent, LoginEffect, LoginUiState>(
     initialState = LoginState(),
     initialUiState = LoginUiState()
 ) {

@@ -89,6 +89,10 @@ interface UseCaseModule {
 
     @Singleton
     @Binds
+    fun bindGetPostsUseCase(impl: GetPostsUseCaseImpl): GetPostsUseCase
+
+    @Singleton
+    @Binds
     fun bindValidateMetricTargetUseCase(impl : ValidateMetricTargetUseCaseImpl) : ValidateMetricTargetUseCase
 
     @Singleton

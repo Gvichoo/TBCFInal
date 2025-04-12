@@ -63,7 +63,7 @@ class AddGoalViewModel @Inject constructor(
 
 
     //On Metric Target Update
-    private fun onMetricTargetChanged(metricTarget : Int){
+    private fun onMetricTargetChanged(metricTarget : String){
         updateUiState { this.copy(metricTarget = metricTarget) }
 
         val metricTargetValidationResult = validateInputOnChange { validateMetricTargetUseCase(metricTarget = metricTarget) }
@@ -163,7 +163,7 @@ class AddGoalViewModel @Inject constructor(
         description: String,
         goalDate : Date?,
         metricUnit: String,
-        metricTarget: Int,
+        metricTarget: String,
         isMetricEnabled: Boolean
 
     ): Boolean {
@@ -219,7 +219,7 @@ class AddGoalViewModel @Inject constructor(
         description: String,
         targetDate: Date,
         metricUnit: String,
-        metricTarget: Int,
+        metricTarget: String,
         isMetricEnabled: Boolean
     ) {
         viewModelScope.launch {

@@ -22,8 +22,13 @@ class PostsDiffUtil : DiffUtil.ItemCallback<PostPresentation>() {
 class PostsAdapter : ListAdapter<PostPresentation, PostsAdapter.PostViewHolder>(PostsDiffUtil()) {
     inner class PostViewHolder(private val binding: ItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun onBind() {
-
+        fun onBind(postPresentation: PostPresentation) {
+            binding.apply {
+                tvAuthor.text = postPresentation.authorUsername
+                tvTitle.text = postPresentation.title
+                tvDescription.text = postPresentation.description
+                tvDate.text = postPresentation.createdAt.toString()
+            }
         }
     }
 
@@ -34,6 +39,8 @@ class PostsAdapter : ListAdapter<PostPresentation, PostsAdapter.PostViewHolder>(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.onBind()
+        holder.onBind(
+            postPresentation = getItem(position)
+        )
     }
 }

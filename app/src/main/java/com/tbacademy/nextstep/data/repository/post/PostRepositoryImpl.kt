@@ -3,7 +3,9 @@ package com.tbacademy.nextstep.data.repository.post
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tbacademy.nextstep.data.common.mapper.toApiError
+import com.tbacademy.nextstep.data.remote.dto.PostDto
 import com.tbacademy.nextstep.domain.core.Resource
+import com.tbacademy.nextstep.domain.mapper.toDomain
 import com.tbacademy.nextstep.domain.model.Goal
 import com.tbacademy.nextstep.domain.model.Post
 import com.tbacademy.nextstep.domain.repository.post.PostRepository
@@ -24,8 +26,7 @@ class PostRepositoryImpl @Inject constructor(
 
             val posts = snapshot.documents.mapNotNull { doc ->
                 try {
-
-                    doc.toObject(Post::class.java)?.copy(id = doc.id)
+                    doc.toObject(PostDto::class.java)?.copy(id = doc.id)
                 } catch (e: Exception) {
                     null
                 }
@@ -33,7 +34,7 @@ class PostRepositoryImpl @Inject constructor(
 
             Log.d("HOME_STATE_REPO", "$posts")
 
-            emit(Resource.Success(posts))
+            emit(Resource.Success(posts.map { it.toDomain() }))
         } catch (e: Exception) {
             emit(Resource.Error(e.toApiError()))
         } finally {

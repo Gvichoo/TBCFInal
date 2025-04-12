@@ -3,39 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/homeFragment2">
+    app:startDestination="@id/nav_home">
+
 
     <fragment
-        android:id="@+id/addGoalFragment2"
+        android:id="@+id/nav_Add"
         android:name="com.tbacademy.nextstep.presentation.screen.main.add.AddGoalFragment"
-        android:label="fragment_add_goal"
-        tools:layout="@layout/fragment_add_goal" >
-        <action
-            android:id="@+id/action_addGoalFragment2_to_homeFragment2"
-            app:destination="@id/homeFragment2" />
-    </fragment>
+        android:label="Add"
+        tools:layout="@layout/fragment_add_goal" />
     <fragment
-        android:id="@+id/homeFragment2"
+        android:id="@+id/nav_home"
         android:name="com.tbacademy.nextstep.presentation.screen.main.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment2_to_addGoalFragment2"
-            app:destination="@id/addGoalFragment2" />
-    </fragment>
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/notificationFragment"
+        android:id="@+id/nav_Notification"
         android:name="com.tbacademy.nextstep.presentation.screen.main.notification.NotificationFragment"
-        android:label="fragment_notification"
+        android:label="Notification"
         tools:layout="@layout/fragment_notification" />
     <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.tbacademy.nextstep.presentation.screen.main.profile.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
-    <fragment
-        android:id="@+id/settingsFragment"
+        android:id="@+id/nav_settings"
         android:name="com.tbacademy.nextstep.presentation.screen.main.settings.SettingsFragment"
-        android:label="fragment_settings"
+        android:label="Settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.tbacademy.nextstep.presentation.screen.main.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

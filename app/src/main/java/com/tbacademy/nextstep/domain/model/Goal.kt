@@ -7,9 +7,7 @@ data class Goal(
     val title: String = "",
     val description: String? = null,
     val isMetricBased: Boolean = false,
-
     val metricTarget: String? = null, //Was Float
-
     val metricUnit: String? = null,
     val targetDate: Date,
     val createdAt: Date = Date()

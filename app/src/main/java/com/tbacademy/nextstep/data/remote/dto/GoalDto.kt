@@ -10,7 +10,7 @@ data class GoalDto(
     val title: String = "",
     val description: String? = null,
     val isMetricBased: Boolean = false,
-    val metricTarget: Int? = null, // Was Float
+    val metricTarget: String? = null, // Was Float
     val metricUnit: String? = null,
     val targetDate: Timestamp,
     val createdAt: Date = Date()

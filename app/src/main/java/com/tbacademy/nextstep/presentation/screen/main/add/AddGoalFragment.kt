@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.util.Log
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.tbacademy.nextstep.databinding.FragmentAddGoalBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
@@ -123,19 +124,7 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
         }
     }
 
-//    private fun setMetricTargetInputListener() {
-//        binding.etMetricTarget.onTextChanged { input ->
-//            val trimmedInput = input.trim()
-//            if (trimmedInput.isNotEmpty() && trimmedInput.all { it.isDigit() }) {
-//                val metricTarget = trimmedInput.toInt()
-//                addGoalViewModel.onEvent(
-//                    AddGoalEvent.GoalMetricTargetChanged(metricTarget = metricTarget)
-//                )
-//            }else{
-//
-//            }
-//        }
-//    }
+
 
     private fun setMetricUnitInputListener(){
         binding.etMetricUnit.onTextChanged { metricUnit ->
@@ -194,9 +183,9 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
 
     private fun navToHomeFragment(){
-//        findNavController().navigate(
-//            AddGoalFragmentDirections.actionAddGoalFragmentToHomeFragment()
-//        )
+        findNavController().navigate(
+            AddGoalFragmentDirections.actionNavAddToNavHome()
+        )
     }
 
 

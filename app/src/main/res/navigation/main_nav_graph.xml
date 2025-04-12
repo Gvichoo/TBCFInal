@@ -10,7 +10,11 @@
         android:id="@+id/nav_Add"
         android:name="com.tbacademy.nextstep.presentation.screen.main.add.AddGoalFragment"
         android:label="Add"
-        tools:layout="@layout/fragment_add_goal" />
+        tools:layout="@layout/fragment_add_goal" >
+        <action
+            android:id="@+id/action_nav_Add_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
     <fragment
         android:id="@+id/nav_home"
         android:name="com.tbacademy.nextstep.presentation.screen.main.home.HomeFragment"

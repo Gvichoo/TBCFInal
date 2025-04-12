@@ -3,9 +3,13 @@ package com.tbacademy.nextstep.domain.model
 import java.util.Date
 
 data class Post(
-    val id: String = "",
-    val authorId: String = "",
-    val referenceType: String = "",
-    val referenceId: String = "",
-    val createdAt: Date = Date()
+    val id: String,
+    val authorId: String,
+    val authorUsername: String,
+    val title: String,
+    val description: String,
+    val reactionCount: Int,
+    val commentCount: Int,
+    val type: String,
+    val createdAt: Date
 )

@@ -61,6 +61,30 @@ class AddGoalViewModel @Inject constructor(
 
 
 
+
+    //On Metric Target Update
+    private fun onMetricTargetChanged(metricTarget : String){
+        updateUiState { this.copy(metricTarget = metricTarget) }
+
+        val metricTargetValidationResult = validateInputOnChange { validateMetricTargetUseCase(metricTarget = metricTarget) }
+        val metricTargetErrorMessage : Int? = metricTargetValidationResult?.getErrorMessageResId()
+        updateState { this.copy(goalMetricTargetErrorMessage = metricTargetErrorMessage) }
+    }
+
+//    private fun onMetricTargetChanged(metricTarget: Int) {
+//        updateUiState { this.copy(metricTarget = metricTarget) }
+//
+//        // Always validate if form has been submitted
+//        val metricTargetValidationResult = if (state.value.formBeenSubmitted) {
+//            validateMetricTargetUseCase(metricTarget = metricTarget)
+//        } else {
+//            validateInputOnChange { validateMetricTargetUseCase(metricTarget = metricTarget) }
+//        }
+//
+//        val metricTargetErrorMessage = metricTargetValidationResult?.getErrorMessageResId()
+//        updateState { this.copy(goalMetricTargetErrorMessage = metricTargetErrorMessage) }
+//    }
+
     //On Metric Unit Update
     private fun onMetricUnitChanged(metricUnit : String ){
         updateUiState { this.copy(metricUnit = metricUnit) }
@@ -71,14 +95,6 @@ class AddGoalViewModel @Inject constructor(
         updateState { this.copy(goalMetricUnitErrorMessage = metricUnitErrorMessage) }
     }
 
-    //On Metric Target Update
-    private fun onMetricTargetChanged(metricTarget : Int){
-        updateUiState { this.copy(metricTarget = metricTarget) }
-
-        val metricTargetValidationResult = validateInputOnChange { validateMetricTargetUseCase(metricTarget = metricTarget) }
-        val metricTargetErrorMessage : Int? = metricTargetValidationResult?.getErrorMessageResId()
-        updateState { this.copy(goalMetricTargetErrorMessage = metricTargetErrorMessage) }
-    }
 
     // On Title Update
     private fun onTitleChanged(title: String) {
@@ -147,7 +163,7 @@ class AddGoalViewModel @Inject constructor(
         description: String,
         goalDate : Date?,
         metricUnit: String,
-        metricTarget: Int,
+        metricTarget: String,
         isMetricEnabled: Boolean
 
     ): Boolean {
@@ -203,7 +219,7 @@ class AddGoalViewModel @Inject constructor(
         description: String,
         targetDate: Date,
         metricUnit: String,
-        metricTarget: Int,
+        metricTarget: String,
         isMetricEnabled: Boolean
     ) {
         viewModelScope.launch {

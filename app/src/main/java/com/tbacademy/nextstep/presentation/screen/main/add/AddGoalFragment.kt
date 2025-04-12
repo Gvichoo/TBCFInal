@@ -51,8 +51,8 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
                tlGoalTitle.error = state.goalTitleErrorMessage?.let { getString(it) }
                tlGoalDescription.error = state.goalDescriptionErrorMessage?.let { getString(it) }
                tlTargetDate.error = state.goalDateErrorMessage?.let { getString(it) }
-               tlMetricUnit.error = state.goalMetricTargetErrorMessage?.let { getString(it) }
-               tlMetricTarget.error = state.goalMetricUnitErrorMessage?.let { getString(it) }
+               tlMetricUnit.error = state.goalMetricUnitErrorMessage?.let { getString(it) }
+               tlMetricTarget.error = state.goalMetricTargetErrorMessage?.let { getString(it) }
 
 
                btnCreateGoal.isEnabled = state.isCreateGoalEnabled
@@ -117,17 +117,32 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
         setMetricUnitInputListener()
     }
 
+    private fun setMetricTargetInputListener() {
+        binding.etMetricTarget.onTextChanged { metricTarget ->
+                addGoalViewModel.onEvent(AddGoalEvent.GoalMetricTargetChanged(metricTarget = metricTarget))
+        }
+    }
+
+//    private fun setMetricTargetInputListener() {
+//        binding.etMetricTarget.onTextChanged { input ->
+//            val trimmedInput = input.trim()
+//            if (trimmedInput.isNotEmpty() && trimmedInput.all { it.isDigit() }) {
+//                val metricTarget = trimmedInput.toInt()
+//                addGoalViewModel.onEvent(
+//                    AddGoalEvent.GoalMetricTargetChanged(metricTarget = metricTarget)
+//                )
+//            }else{
+//
+//            }
+//        }
+//    }
+
     private fun setMetricUnitInputListener(){
         binding.etMetricUnit.onTextChanged { metricUnit ->
             addGoalViewModel.onEvent(AddGoalEvent.GoalMetricUnitChanged(metricUnit = metricUnit))
         }
     }
 
-    private fun setMetricTargetInputListener(){
-        binding.etMetricTarget.onTextChanged { metricTarget ->
-            addGoalViewModel.onEvent(AddGoalEvent.GoalMetricTargetChanged(metricTarget = metricTarget.toInt()))
-        }
-    }
 
     private fun setTitleInputListener() {
         binding.etGoalTitle.onTextChanged { title ->

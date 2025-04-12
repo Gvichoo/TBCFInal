@@ -5,15 +5,23 @@ import com.tbacademy.nextstep.domain.core.InputValidationResult
 import javax.inject.Inject
 
 interface ValidateMetricTargetUseCase {
-    operator fun invoke(metricTarget : Int) : InputValidationResult
+    operator fun invoke(metricTarget : String) : InputValidationResult
 }
 
 class ValidateMetricTargetUseCaseImpl @Inject constructor() : ValidateMetricTargetUseCase{
-    override fun invoke(metricTarget: Int): InputValidationResult {
+    override fun invoke(metricTarget: String): InputValidationResult {
         return when {
-            metricTarget <= 0 -> InputValidationResult.Failure(error = InputValidationError.Empty)
+            metricTarget.isBlank() -> InputValidationResult.Failure(InputValidationError.Empty)
 
-            else -> InputValidationResult.Success
+            !metricTarget.matches(Regex("\\d+")) -> InputValidationResult.Failure(InputValidationError.Invalid)
+
+            else -> {
+                val value = metricTarget.toInt()
+                when {
+                    value <= 0 -> InputValidationResult.Failure(InputValidationError.Invalid)
+                    else -> InputValidationResult.Success
+                }
+            }
         }
     }
 }

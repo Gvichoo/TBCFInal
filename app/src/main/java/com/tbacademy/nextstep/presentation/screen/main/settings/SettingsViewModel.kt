@@ -1,6 +1,5 @@
 package com.tbacademy.nextstep.presentation.screen.main.settings
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.domain.usecase.userSession.ClearValueFromLocalStorageUseCase
 import com.tbacademy.nextstep.presentation.base.BaseViewModel
@@ -13,9 +12,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val clearValueFromLocalStorageUseCase: ClearValueFromLocalStorageUseCase,
-) : BaseViewModel<Unit, SettingsEvent, SettingsEffect, Unit>(
+) : BaseViewModel<Unit, SettingsEvent, SettingsEffect>(
     initialState = Unit,
-    initialUiState = Unit
 ) {
 
     override fun onEvent(event: SettingsEvent) {

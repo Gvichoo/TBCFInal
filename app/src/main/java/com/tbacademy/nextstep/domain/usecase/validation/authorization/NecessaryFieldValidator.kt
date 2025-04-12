@@ -4,11 +4,11 @@ import com.tbacademy.nextstep.domain.core.InputValidationError
 import com.tbacademy.nextstep.domain.core.InputValidationResult
 import javax.inject.Inject
 
-interface ValidateNecessaryFieldUseCase {
+interface NecessaryFieldValidator {
     operator fun invoke(input: String): InputValidationResult
 }
 
-class ValidateNecessaryFieldUseCaseImpl @Inject constructor() : ValidateNecessaryFieldUseCase {
+class NecessaryFieldValidatorImpl @Inject constructor() : NecessaryFieldValidator {
     override fun invoke(input: String): InputValidationResult {
         return if (input.isEmpty()) {
             InputValidationResult.Failure(error = InputValidationError.Empty)

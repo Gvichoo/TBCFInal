@@ -7,15 +7,14 @@ import com.tbacademy.nextstep.domain.core.InputValidationResult
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.usecase.login.LoginUseCase
 import com.tbacademy.nextstep.domain.usecase.userSession.SaveValueToLocalStorageUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateEmailUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateNecessaryFieldUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.EmailValidator
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.NecessaryFieldValidator
 import com.tbacademy.nextstep.presentation.base.BaseViewModel
 import com.tbacademy.nextstep.presentation.common.mapper.toMessageRes
 import com.tbacademy.nextstep.presentation.extension.getErrorMessageResId
 import com.tbacademy.nextstep.presentation.screen.authentication.login.effect.LoginEffect
 import com.tbacademy.nextstep.presentation.screen.authentication.login.event.LoginEvent
 import com.tbacademy.nextstep.presentation.screen.authentication.login.state.LoginState
-import com.tbacademy.nextstep.presentation.screen.authentication.login.state.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
@@ -25,13 +24,12 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val validateEmailUseCase: ValidateEmailUseCaseImpl,
-    private val validateNecessaryFieldUseCase: ValidateNecessaryFieldUseCase,
+    private val emailValidator: EmailValidator,
+    private val necessaryFieldValidator: NecessaryFieldValidator,
     private val saveValueToLocalStorageUseCase: SaveValueToLocalStorageUseCase,
 
-    ) : BaseViewModel<LoginState, LoginEvent, LoginEffect, LoginUiState>(
+    ) : BaseViewModel<LoginState, LoginEvent, LoginEffect>(
     initialState = LoginState(),
-    initialUiState = LoginUiState()
 ) {
 
     override fun onEvent(event: LoginEvent) {
@@ -48,9 +46,9 @@ class LoginViewModel @Inject constructor(
 
     // On Email Update
     private fun onEmailChanged(email: String) {
-        updateUiState { this.copy(email = email) }
+        updateState { this.copy(email = email) }
 
-        val emailValidationResult = validateInputOnChange { validateEmailUseCase(email = email) }
+        val emailValidationResult = validateInputOnChange { emailValidator(email = email) }
         val emailErrorMessage: Int? = emailValidationResult?.getErrorMessageResId()
 
         updateState { this.copy(emailErrorMessage = emailErrorMessage) }
@@ -58,10 +56,10 @@ class LoginViewModel @Inject constructor(
 
     // On Password Update
     private fun onPasswordChanged(password: String) {
-        updateUiState { this.copy(password = password) }
+        updateState { this.copy(password = password) }
 
         val passwordValidationResult =
-            validateInputOnChange { validateNecessaryFieldUseCase(input = password) }
+            validateInputOnChange { necessaryFieldValidator(input = password) }
         val passwordErrorMessage: Int? = passwordValidationResult?.getErrorMessageResId()
 
         updateState { this.copy(passwordErrorMessage = passwordErrorMessage) }
@@ -69,7 +67,7 @@ class LoginViewModel @Inject constructor(
 
     // On Remember Me Update
     private fun onRememberMeChanged(rememberMe: Boolean) {
-        updateUiState { this.copy(rememberMe = rememberMe) }
+        updateState { this.copy(rememberMe = rememberMe) }
 
         viewModelScope.launch {
             saveValueToLocalStorageUseCase(KEY_REMEMBER_ME, rememberMe)
@@ -80,15 +78,15 @@ class LoginViewModel @Inject constructor(
     private fun submitLogInForm() {
 
         val formIsValid = validateForm(
-            email = uiState.value.email,
-            password = uiState.value.password
+            email = state.value.email,
+            password = state.value.password
         )
 
         if (formIsValid) {
             loginUser(
-                email = uiState.value.email,
-                password = uiState.value.password,
-                rememberMe = uiState.value.rememberMe
+                email = state.value.email,
+                password = state.value.password,
+                rememberMe = state.value.rememberMe
             )
         } else {
             updateState { this.copy(formBeenSubmitted = true) }
@@ -103,9 +101,9 @@ class LoginViewModel @Inject constructor(
     ): Boolean {
 
         // Validate Inputs
-        val emailValidationError = validateEmailUseCase(email = email).getErrorMessageResId()
+        val emailValidationError = emailValidator(email = email).getErrorMessageResId()
         val passwordValidationError =
-            validateNecessaryFieldUseCase(input = password).getErrorMessageResId()
+            necessaryFieldValidator(input = password).getErrorMessageResId()
 
         // Update states of errors
         updateState {

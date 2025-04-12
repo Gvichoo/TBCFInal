@@ -48,7 +48,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun observeUiState() {
-        collect(flow = loginViewModel.uiState) { state ->
+        collect(flow = loginViewModel.state) { state ->
             binding.apply {
                 cbRememberMe.isChecked = state.rememberMe
             }

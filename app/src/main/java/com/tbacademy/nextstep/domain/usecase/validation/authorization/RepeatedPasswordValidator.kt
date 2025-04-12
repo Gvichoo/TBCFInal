@@ -4,11 +4,11 @@ import com.tbacademy.nextstep.domain.core.InputValidationError
 import com.tbacademy.nextstep.domain.core.InputValidationResult
 import javax.inject.Inject
 
-interface ValidateRepeatedPasswordUseCase {
+interface RepeatedPasswordValidator {
     operator fun invoke(password: String, repeatedPassword: String): InputValidationResult
 }
 
-class ValidateRepeatedPasswordUseCaseImpl @Inject constructor(): ValidateRepeatedPasswordUseCase {
+class RepeatedPasswordValidatorImpl @Inject constructor(): RepeatedPasswordValidator {
 
     override operator fun invoke(password: String, repeatedPassword: String): InputValidationResult {
 

@@ -16,9 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getPostsUseCase: GetPostsUseCase
-) : BaseViewModel<HomeState, HomeEvent, HomeEffect, Unit>(
+) : BaseViewModel<HomeState, HomeEvent, HomeEffect>(
     initialState = HomeState(),
-    initialUiState = Unit
 ) {
     override fun onEvent(event: HomeEvent) {
         when (event) {

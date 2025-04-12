@@ -5,11 +5,11 @@ import com.tbacademy.nextstep.domain.core.InputValidationResult
 import java.util.regex.Pattern.compile
 import javax.inject.Inject
 
-interface ValidateEmailUseCase {
+interface EmailValidator {
     operator fun invoke(email: String?): InputValidationResult
 }
 
-class ValidateEmailUseCaseImpl @Inject constructor(): ValidateEmailUseCase {
+class EmailValidatorImpl @Inject constructor(): EmailValidator {
     private val emailRegex = compile(
         "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
                 "\\@" +

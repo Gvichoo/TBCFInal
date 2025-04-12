@@ -4,11 +4,11 @@ import com.tbacademy.nextstep.domain.core.InputValidationError
 import com.tbacademy.nextstep.domain.core.InputValidationResult
 import javax.inject.Inject
 
-interface ValidateUsernameUseCase {
+interface UsernameValidator {
     operator fun invoke(username: String): InputValidationResult
 }
 
-class ValidateUsernameUseCaseImpl @Inject constructor(): ValidateUsernameUseCase {
+class UsernameValidatorImpl @Inject constructor(): UsernameValidator {
 
     override operator fun invoke(username: String): InputValidationResult {
 

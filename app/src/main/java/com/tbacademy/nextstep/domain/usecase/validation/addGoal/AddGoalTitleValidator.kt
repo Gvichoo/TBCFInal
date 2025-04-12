@@ -4,11 +4,11 @@ import com.tbacademy.nextstep.domain.core.InputValidationError
 import com.tbacademy.nextstep.domain.core.InputValidationResult
 import javax.inject.Inject
 
-interface ValidateAddGoalTitleUseCase {
+interface AddGoalTitleValidator {
     operator fun invoke(title: String): InputValidationResult
 }
 
-class ValidateAddGoalTitleUseCaseImpl @Inject constructor() : ValidateAddGoalTitleUseCase{
+class AddGoalTitleValidatorImpl @Inject constructor() : AddGoalTitleValidator{
     override fun invoke(title: String): InputValidationResult {
         return when{
             title.isEmpty() -> InputValidationResult.Failure(error = InputValidationError.Empty)

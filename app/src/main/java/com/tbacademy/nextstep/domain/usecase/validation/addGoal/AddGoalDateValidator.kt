@@ -5,11 +5,11 @@ import com.tbacademy.nextstep.domain.core.InputValidationResult
 import java.util.Date
 import javax.inject.Inject
 
-interface ValidateAddGoalDateUseCase {
+interface AddGoalDateValidator {
     operator fun invoke(date: Date?): InputValidationResult
 }
 
-class ValidateAddGoalDateUseCaseImpl @Inject constructor() : ValidateAddGoalDateUseCase {
+class AddGoalDateValidatorImpl @Inject constructor() : AddGoalDateValidator {
     override fun invoke(date: Date?): InputValidationResult {
         return when {
             date == null -> InputValidationResult.Failure(error = InputValidationError.Empty)

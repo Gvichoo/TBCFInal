@@ -5,11 +5,11 @@ import com.tbacademy.nextstep.domain.core.InputValidationResult
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-interface ValidatePasswordUseCase {
+interface PasswordValidator {
     operator fun invoke(password: String): InputValidationResult
 }
 
-class ValidatePasswordUseCaseImpl @Inject constructor() : ValidatePasswordUseCase {
+class PasswordValidatorImpl @Inject constructor() : PasswordValidator {
     private val passwordRegex = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d).+$")
 
     override operator fun invoke(password: String): InputValidationResult {

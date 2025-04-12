@@ -63,7 +63,7 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
     }
 
     private fun observeUiState(){
-        collect(addGoalViewModel.uiState){ uiState ->
+        collect(addGoalViewModel.state){ uiState ->
             binding.apply {
                 metricInputContainer.isVisible = uiState.isMetricEnabled
             }

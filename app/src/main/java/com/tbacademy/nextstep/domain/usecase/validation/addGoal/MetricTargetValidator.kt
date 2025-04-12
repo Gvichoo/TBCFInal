@@ -4,11 +4,11 @@ import com.tbacademy.nextstep.domain.core.InputValidationError
 import com.tbacademy.nextstep.domain.core.InputValidationResult
 import javax.inject.Inject
 
-interface ValidateMetricTargetUseCase {
+interface MetricTargetValidator {
     operator fun invoke(metricTarget : String) : InputValidationResult
 }
 
-class ValidateMetricTargetUseCaseImpl @Inject constructor() : ValidateMetricTargetUseCase{
+class MetricTargetValidatorImpl @Inject constructor() : MetricTargetValidator{
     override fun invoke(metricTarget: String): InputValidationResult {
         return when {
             metricTarget.isBlank() -> InputValidationResult.Failure(InputValidationError.Empty)

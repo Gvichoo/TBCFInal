@@ -10,26 +10,26 @@ import com.tbacademy.nextstep.domain.usecase.userSession.ReadValueFromLocalStora
 import com.tbacademy.nextstep.domain.usecase.userSession.ReadValueFromLocalStorageUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.userSession.SaveValueToLocalStorageUseCase
 import com.tbacademy.nextstep.domain.usecase.userSession.SaveValueToLocalStorageUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalDateUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalDateUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalDescriptionUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalDescriptionUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateEmailUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateEmailUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateNecessaryFieldUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateNecessaryFieldUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidatePasswordUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidatePasswordUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateRepeatedPasswordUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateRepeatedPasswordUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateUsernameUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.authorization.ValidateUsernameUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalTitleUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateAddGoalTitleUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricTargetUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricTargetUseCaseImpl
-import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricUnitUseCase
-import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricUnitUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.AddGoalDateValidator
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.AddGoalDateValidatorImpl
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.AddGoalDescriptionValidator
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.AddGoalDescriptionValidatorImpl
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.EmailValidator
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.NecessaryFieldValidator
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.PasswordValidator
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.RepeatedPasswordValidator
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.UsernameValidator
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.AddGoalTitleValidator
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.AddGoalTitleValidatorImpl
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.MetricTargetValidator
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.MetricTargetValidatorImpl
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.MetricUnitValidator
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.MetricUnitValidatorImpl
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.EmailValidatorImpl
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.NecessaryFieldValidatorImpl
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.PasswordValidatorImpl
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.RepeatedPasswordValidatorImpl
+import com.tbacademy.nextstep.domain.usecase.validation.authorization.UsernameValidatorImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -39,25 +39,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface UseCaseModule {
-    @Singleton
-    @Binds
-    fun bindValidateEmailUseCase(validateEmailUseCase: ValidateEmailUseCaseImpl): ValidateEmailUseCase
-
-    @Singleton
-    @Binds
-    fun bindValidatePasswordUseCase(validatePasswordUseCase: ValidatePasswordUseCaseImpl): ValidatePasswordUseCase
-
-    @Singleton
-    @Binds
-    fun bindValidateRepeatedPasswordUseCase(validateRepeatedPasswordUseCase: ValidateRepeatedPasswordUseCaseImpl): ValidateRepeatedPasswordUseCase
-
-    @Singleton
-    @Binds
-    fun bindValidateUsernameUseCase(validateUsernameUseCase: ValidateUsernameUseCaseImpl): ValidateUsernameUseCase
-
-    @Singleton
-    @Binds
-    fun bindNecessaryFieldUseCase(validateNecessaryFieldUseCase: ValidateNecessaryFieldUseCaseImpl): ValidateNecessaryFieldUseCase
 
     @Singleton
     @Binds
@@ -75,29 +56,9 @@ interface UseCaseModule {
     @Binds
     fun bindCreateGoalUseCase(impl : CreateGoalUseCaseImpl) : CreateGoalUseCase
 
-    @Singleton
-    @Binds
-    fun bindValidateAddGoalTitleUseCase(impl : ValidateAddGoalTitleUseCaseImpl) : ValidateAddGoalTitleUseCase
-
-    @Singleton
-    @Binds
-    fun bindValidateAddGoalDescriptionUseCase(impl : ValidateAddGoalDescriptionUseCaseImpl) : ValidateAddGoalDescriptionUseCase
-
-    @Singleton
-    @Binds
-    fun bindValidateAddGoalDateUseCase(impl : ValidateAddGoalDateUseCaseImpl) : ValidateAddGoalDateUseCase
 
     @Singleton
     @Binds
     fun bindGetPostsUseCase(impl: GetPostsUseCaseImpl): GetPostsUseCase
-
-    @Singleton
-    @Binds
-    fun bindValidateMetricTargetUseCase(impl : ValidateMetricTargetUseCaseImpl) : ValidateMetricTargetUseCase
-
-    @Singleton
-    @Binds
-    fun bindValidateMetricUnitUseCase(impl : ValidateMetricUnitUseCaseImpl) : ValidateMetricUnitUseCase
-
 
 }

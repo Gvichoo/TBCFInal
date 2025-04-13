@@ -21,6 +21,7 @@ class PostRepositoryImpl @Inject constructor(
         emit(Resource.Loading(true))
         try {
             val snapshot = firestore.collection("posts")
+                .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .get()
                 .await()
 
@@ -31,8 +32,6 @@ class PostRepositoryImpl @Inject constructor(
                     null
                 }
             }
-
-            Log.d("HOME_STATE_REPO", "$posts")
 
             emit(Resource.Success(posts.map { it.toDomain() }))
         } catch (e: Exception) {

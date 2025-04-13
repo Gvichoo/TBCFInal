@@ -23,6 +23,7 @@ class HomeViewModel @Inject constructor(
     override fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.FetchGlobalPosts -> getGlobalPosts()
+            is HomeEvent.ReactToPost -> {}
         }
     }
 

@@ -9,6 +9,5 @@ data class AddGoalUiState (
     val metricTarget : String = "",
     val metricUnit : String = "",
     val isMetricEnabled: Boolean = false,
-
 )
 

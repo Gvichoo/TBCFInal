@@ -59,8 +59,6 @@ class AddGoalViewModel @Inject constructor(
         }
     }
 
-
-
     //On Metric Unit Update
     private fun onMetricUnitChanged(metricUnit : String ){
         updateUiState { this.copy(metricUnit = metricUnit) }

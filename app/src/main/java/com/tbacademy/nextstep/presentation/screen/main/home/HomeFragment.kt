@@ -17,7 +17,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     private val postsAdapter: PostsAdapter by lazy {
-        PostsAdapter()
+        PostsAdapter(
+            reactionBtnClick = { postId ->
+                homeViewModel.onEvent(event = HomeEvent.ReactToPost(postId = postId))
+            }
+        )
     }
 
     private val homeViewModel: HomeViewModel by viewModels()
@@ -47,7 +51,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun observeEffects() {
         collect(flow = homeViewModel.effects) { effect ->
-            when(effect) {
+            when (effect) {
                 is HomeEffect.ShowError -> effect.errorRes?.let { showMessage(message = it) }
             }
         }

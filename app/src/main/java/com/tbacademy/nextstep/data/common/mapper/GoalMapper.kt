@@ -13,6 +13,7 @@ fun Goal.toDto(): GoalDto {
         isMetricBased = isMetricBased,
         metricUnit = metricUnit,
         metricTarget = metricTarget,
-        createdAt = createdAt
+        createdAt = createdAt,
+        imageUrl = imageUrl
     )
 }

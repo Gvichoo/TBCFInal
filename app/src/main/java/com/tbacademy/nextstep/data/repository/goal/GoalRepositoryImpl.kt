@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.tbacademy.nextstep.data.common.mapper.toApiError
 import com.tbacademy.nextstep.data.common.mapper.toDto
 import com.tbacademy.nextstep.data.remote.dto.GoalDto
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class GoalRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
+    private val firebaseStorage: FirebaseStorage
 ) : GoalRepository {
     override suspend fun createGoal(goal: Goal): Flow<Resource<Boolean>> = flow {
         emit(Resource.Loading(loading = true))
@@ -33,6 +35,15 @@ class GoalRepositoryImpl @Inject constructor(
                 return@flow
             }
 
+            val imageUrl = goal.imageUri?.let { uri ->
+                val storageRef = firebaseStorage.reference.child(
+                    "goal_images/${currentUser.uid}/${System.currentTimeMillis()}"
+                )
+                storageRef.putFile(uri).await()
+                storageRef.downloadUrl.await().toString()
+            }
+
+
             val goalRef = firestore.collection("goals").document()
             val goalId = goalRef.id
             val username: String? = userSnapshot.getString("username")
@@ -41,7 +52,8 @@ class GoalRepositoryImpl @Inject constructor(
                 val goalDto: GoalDto = goal.toDto().copy(
                     authorId = currentUser.uid,
                     authorUsername = username,
-                    id = goalId
+                    id = goalId,
+                    imageUrl = imageUrl
                 )
 
                 // Upload goal to Firestore

@@ -14,6 +14,7 @@ fun Post.toPresentation(): PostPresentation {
         reactionCount,
         commentCount,
         type,
+        imageUrl,
         createdAt.toTimeAgo()
     )
 }

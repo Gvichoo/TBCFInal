@@ -1,5 +1,6 @@
 package com.tbacademy.nextstep.presentation.screen.main.add.state
 
+import android.net.Uri
 import java.util.Date
 
 data class AddGoalUiState (
@@ -9,5 +10,7 @@ data class AddGoalUiState (
     val metricTarget : String = "",
     val metricUnit : String = "",
     val isMetricEnabled: Boolean = false,
+    val imageUri: Uri? = null
+
 )
 

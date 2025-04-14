@@ -1,7 +1,9 @@
 package com.tbacademy.nextstep.presentation.screen.main.add
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.domain.core.InputValidationResult
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.model.Goal
@@ -45,7 +47,8 @@ class AddGoalViewModel @Inject constructor(
                 targetDate = event.goalDate,
                 metricTarget = event.metricTarget,
                 metricUnit = event.metricUnit,
-                isMetricEnabled = event.isMetricEnabled
+                isMetricEnabled = event.isMetricEnabled,
+                imageUri = event.imageUrl
             )
             is AddGoalEvent.GoalDescriptionChanged -> onDescriptionChanged(description = event.description)
             is AddGoalEvent.GoalTitleChanged ->  onTitleChanged(title = event.title)
@@ -56,8 +59,55 @@ class AddGoalViewModel @Inject constructor(
             is AddGoalEvent.MetricToggle -> updateUiState { this.copy(isMetricEnabled = event.enabled) }
             is AddGoalEvent.GoalMetricTargetChanged -> onMetricTargetChanged(metricTarget = event.metricTarget)
             is AddGoalEvent.GoalMetricUnitChanged -> onMetricUnitChanged(metricUnit = event.metricUnit)
+
+            is AddGoalEvent.ImageSelected -> updateUiState { this.copy(imageUri = event.imageUri) }
+            AddGoalEvent.PickImageClicked -> viewModelScope.launch { emitEffect(AddGoalEffect.LaunchMediaPicker) }
+            AddGoalEvent.ImageCleared -> updateUiState { this.copy(imageUri = null) }
         }
     }
+
+    private fun createGoal(
+        title: String,
+        description: String,
+        targetDate: Date,
+        metricUnit: String,
+        metricTarget: String,
+        isMetricEnabled: Boolean,
+        imageUri: Uri?
+    ) {
+        viewModelScope.launch {
+
+
+            val newGoal = Goal(
+                title = title,
+                description = description,
+                targetDate = targetDate,
+                metricUnit = if (isMetricEnabled) metricUnit else null,
+                metricTarget = if (isMetricEnabled) metricTarget else null,
+                imageUri = imageUri
+            )
+            createGoalUseCase(
+
+                goal = newGoal,
+            ).collect { result ->
+                when(result){
+
+                    is Resource.Error ->
+                        emitEffect(AddGoalEffect.ShowError(result.error.toMessageRes()))
+
+                    is Resource.Loading ->
+                        updateState { copy(isLoading = result.loading) }
+
+                    is Resource.Success ->{
+                        updateState { copy(isSuccess = true) }
+                        emitEffect(AddGoalEffect.NavToHomeFragment)
+                    }
+                }
+            }
+            Log.d("CREATE_GOAL", "GOAL: $newGoal")
+        }
+    }
+
 
 
 
@@ -71,19 +121,6 @@ class AddGoalViewModel @Inject constructor(
         updateState { this.copy(goalMetricTargetErrorMessage = metricTargetErrorMessage) }
     }
 
-//    private fun onMetricTargetChanged(metricTarget: Int) {
-//        updateUiState { this.copy(metricTarget = metricTarget) }
-//
-//        // Always validate if form has been submitted
-//        val metricTargetValidationResult = if (state.value.formBeenSubmitted) {
-//            validateMetricTargetUseCase(metricTarget = metricTarget)
-//        } else {
-//            validateInputOnChange { validateMetricTargetUseCase(metricTarget = metricTarget) }
-//        }
-//
-//        val metricTargetErrorMessage = metricTargetValidationResult?.getErrorMessageResId()
-//        updateState { this.copy(goalMetricTargetErrorMessage = metricTargetErrorMessage) }
-//    }
 
     //On Metric Unit Update
     private fun onMetricUnitChanged(metricUnit : String ){
@@ -135,19 +172,24 @@ class AddGoalViewModel @Inject constructor(
             goalDate = uiState.value.goalDate,
             metricUnit = uiState.value.metricUnit,
             metricTarget = uiState.value.metricTarget,
-            isMetricEnabled = uiState.value.isMetricEnabled
+            isMetricEnabled = uiState.value.isMetricEnabled,
+            imageUri = uiState.value.imageUri
+
         )
 
         if (formIsValid) {
             uiState.value.goalDate?.let {
-                createGoal(
-                    title = uiState.value.title,
-                    description = uiState.value.description,
-                    targetDate = it,
-                    metricUnit = uiState.value.metricUnit,
-                    metricTarget = uiState.value.metricTarget,
-                    isMetricEnabled = uiState.value.isMetricEnabled
-                )
+                uiState.value.imageUri?.let { it1 ->
+                    createGoal(
+                        title = uiState.value.title,
+                        description = uiState.value.description,
+                        targetDate = it,
+                        metricUnit = uiState.value.metricUnit,
+                        metricTarget = uiState.value.metricTarget,
+                        isMetricEnabled = uiState.value.isMetricEnabled,
+                        imageUri = uiState.value.imageUri
+                    )
+                }
             }
         }else {
             updateState { this.copy(formBeenSubmitted = true) }
@@ -164,7 +206,9 @@ class AddGoalViewModel @Inject constructor(
         goalDate : Date?,
         metricUnit: String,
         metricTarget: String,
-        isMetricEnabled: Boolean
+        isMetricEnabled: Boolean,
+        imageUri: Uri?
+
 
     ): Boolean {
 
@@ -211,44 +255,5 @@ class AddGoalViewModel @Inject constructor(
         return if (state.value.formBeenSubmitted)
             validator()
         else null
-    }
-
-
-    private fun createGoal(
-        title: String,
-        description: String,
-        targetDate: Date,
-        metricUnit: String,
-        metricTarget: String,
-        isMetricEnabled: Boolean
-    ) {
-        viewModelScope.launch {
-            val newGoal = Goal(
-                title = title,
-                description = description,
-                targetDate = targetDate,
-                metricUnit = if (isMetricEnabled) metricUnit else null,
-                metricTarget = if (isMetricEnabled) metricTarget else null
-            )
-            createGoalUseCase(
-
-                goal = newGoal
-            ).collect { result ->
-                when(result){
-
-                    is Resource.Error ->
-                        emitEffect(AddGoalEffect.ShowError(result.error.toMessageRes()))
-
-                    is Resource.Loading ->
-                        updateState { copy(isLoading = result.loading) }
-
-                    is Resource.Success ->{
-                        updateState { copy(isSuccess = true) }
-                        emitEffect(AddGoalEffect.NavToHomeFragment)
-                    }
-                }
-            }
-            Log.d("CREATE_GOAL", "GOAL: $newGoal")
-        }
     }
 }

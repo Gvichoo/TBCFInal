@@ -1,5 +1,6 @@
 package com.tbacademy.nextstep.domain.model
 
+import android.net.Uri
 import java.util.Date
 
 data class Goal(
@@ -7,8 +8,11 @@ data class Goal(
     val title: String = "",
     val description: String? = null,
     val isMetricBased: Boolean = false,
-    val metricTarget: String? = null, //Was Float
+    val metricTarget: String? = null,
     val metricUnit: String? = null,
     val targetDate: Date,
-    val createdAt: Date = Date()
-)
+    val createdAt: Date = Date(),
+    val imageUri: Uri? = null
+){
+    val imageUrl: String? = null
+}

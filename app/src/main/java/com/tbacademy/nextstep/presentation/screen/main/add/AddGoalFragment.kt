@@ -2,10 +2,18 @@ package com.tbacademy.nextstep.presentation.screen.main.add
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Intent
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.tbacademy.nextstep.databinding.FragmentAddGoalBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
@@ -15,6 +23,7 @@ import com.tbacademy.nextstep.presentation.extension.onTextChanged
 import com.tbacademy.nextstep.presentation.screen.main.add.effect.AddGoalEffect
 import com.tbacademy.nextstep.presentation.screen.main.add.event.AddGoalEvent
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -25,15 +34,23 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
     private val addGoalViewModel: AddGoalViewModel by viewModels()
 
+    private lateinit var pickMediaLauncher: ActivityResultLauncher<PickVisualMediaRequest>
+
+
     @SuppressLint("DefaultLocale")
     override fun start() {
+        initMediaPickerLauncher()
+        setPickPictureBtnListener()
         setDatePicker()
     }
+
+
 
     override fun listeners() {
         setInputListeners()
         setSubmitBtnListener()
         setSwitchListener()
+        setDeleteImageBtnListener()
     }
 
     override fun observers() {
@@ -66,6 +83,12 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
         collect(addGoalViewModel.uiState){ uiState ->
             binding.apply {
                 metricInputContainer.isVisible = uiState.isMetricEnabled
+
+                uiState.imageUri?.let { uri ->
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .into(image)
+                }
             }
         }
     }
@@ -75,11 +98,42 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
             when(effects){
                 AddGoalEffect.NavToHomeFragment -> navToHomeFragment()
                 is AddGoalEffect.ShowError -> showMessage(effects.message)
+                AddGoalEffect.LaunchMediaPicker -> launchImagePicker()
             }
         }
     }
 
 
+    private fun initMediaPickerLauncher() {
+        pickMediaLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            uri?.let {
+                addGoalViewModel.onEvent(AddGoalEvent.ImageSelected(it))
+                binding.image.setImageURI(it)
+                binding.btnCancelImage.isEnabled = true
+            }
+        }
+    }
+
+    private fun setDeleteImageBtnListener() {
+        binding.btnCancelImage.setOnClickListener {
+//          binding.image.setImageResource(R.drawable.placeholder_image)
+            binding.image.setImageDrawable(null)
+            addGoalViewModel.onEvent(AddGoalEvent.ImageCleared)
+            binding.btnCancelImage.isEnabled = false
+        }
+    }
+
+
+
+    private fun setPickPictureBtnListener() {
+        binding.btnSelectImage.setOnClickListener {
+            addGoalViewModel.onEvent(AddGoalEvent.PickImageClicked)
+        }
+    }
+
+    private fun launchImagePicker() {
+        pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
 
 
     @SuppressLint("DefaultLocale")
@@ -125,7 +179,6 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
     }
 
 
-
     private fun setMetricUnitInputListener(){
         binding.etMetricUnit.onTextChanged { metricUnit ->
             addGoalViewModel.onEvent(AddGoalEvent.GoalMetricUnitChanged(metricUnit = metricUnit))
@@ -157,7 +210,6 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
     }
 
 
-
     private fun parseDate(dateString: String): Date? {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return try {
@@ -180,21 +232,15 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
     }
 
 
-
-
     private fun navToHomeFragment(){
         findNavController().navigate(
             AddGoalFragmentDirections.actionNavAddToNavHome()
         )
     }
 
-
-
-
     private fun showMessage(message: Int) {
         view?.let {
             Snackbar.make(it, getString(message), Snackbar.LENGTH_SHORT).show()
         }
     }
-
 }

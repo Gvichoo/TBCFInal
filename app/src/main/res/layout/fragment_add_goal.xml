@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.screen.main.add.AddGoalFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="@dimen/distance_md"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Create Goal"
         android:textSize="@dimen/title_regular"
-        android:text="Create Goal"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tlGoalTitle"
@@ -29,8 +29,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etGoalTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-             />
+            android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -46,16 +45,15 @@
             android:id="@+id/etGoalDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="5"
-             />
+            android:maxLines="5" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tlTargetDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/distance_md"
         android:layout_marginHorizontal="@dimen/pd_screen_horizontal"
+        android:layout_marginTop="@dimen/distance_md"
         android:hint="Target date"
         app:layout_constraintTop_toBottomOf="@id/tlGoalDescription">
 
@@ -63,8 +61,8 @@
             android:id="@+id/etTargetDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
             android:clickable="true"
+            android:focusable="false"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,27 +70,27 @@
         android:id="@+id/switchMetricBased"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Make this a measurable goal?"
         android:layout_marginTop="@dimen/distance_md"
-        app:layout_constraintTop_toBottomOf="@id/tlTargetDate"
-        app:layout_constraintStart_toStartOf="@id/tlTargetDate" />
+        android:text="Make this a measurable goal?"
+        app:layout_constraintStart_toStartOf="@id/tlTargetDate"
+        app:layout_constraintTop_toBottomOf="@id/tlTargetDate" />
 
     <LinearLayout
         android:id="@+id/metricInputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginHorizontal="@dimen/pd_screen_horizontal"
-        app:layout_constraintTop_toBottomOf="@id/switchMetricBased"
         android:layout_marginTop="@dimen/distance_md"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:visibility="gone"
-        android:gravity="center_vertical">
+        app:layout_constraintTop_toBottomOf="@id/switchMetricBased">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tlMetricTarget"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:hint="Target value">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -109,8 +107,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tlMetricUnit"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:hint="Unit (e.g. kg, km)">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -120,6 +118,40 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="@dimen/distance_sm"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/place_holder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/metricInputContainer" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSelectImage"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/distance_sm"
+        android:text="Choose Image"
+        android:layout_marginStart="@dimen/distance_sm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelImage"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/distance_sm"
+        android:layout_marginEnd="@dimen/distance_sm"
+        android:text="Cancel"
+        android:enabled="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image" />
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCreateGoal"
@@ -132,7 +164,8 @@
         android:textSize="@dimen/body_regular"
         app:layout_constraintEnd_toEndOf="@id/tlGoalTitle"
         app:layout_constraintStart_toStartOf="@id/tlGoalTitle"
-        app:layout_constraintTop_toBottomOf="@id/metricInputContainer" />
+        app:layout_constraintTop_toBottomOf="@id/btnSelectImage" />
+
 
     <include
         android:id="@+id/loaderAddGoal"

@@ -140,4 +140,10 @@
     <color name="md_theme_surfaceContainer_highContrast">#333027</color>
     <color name="md_theme_surfaceContainerHigh_highContrast">#3E3B32</color>
     <color name="md_theme_surfaceContainerHighest_highContrast">#4A473D</color>
+
+    <color name="reaction_fire_bg">#8C4400</color>
+    <color name="reaction_heart_bg">#7D1201</color>
+    <color name="reaction_cookie_bg">#6A5E36</color>
+    <color name="reaction_cheer_bg">#2C4B5B</color>
+    <color name="reaction_task_bg">#3B3C5C</color>
 </resources>

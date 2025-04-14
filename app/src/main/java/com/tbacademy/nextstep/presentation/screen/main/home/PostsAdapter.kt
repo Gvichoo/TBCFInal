@@ -1,5 +1,6 @@
 package com.tbacademy.nextstep.presentation.screen.main.home
 
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -24,10 +25,26 @@ class PostsDiffUtil : DiffUtil.ItemCallback<PostPresentation>() {
     override fun areContentsTheSame(oldItem: PostPresentation, newItem: PostPresentation): Boolean {
         return oldItem == newItem
     }
+
+    override fun getChangePayload(oldItem: PostPresentation, newItem: PostPresentation): Any? {
+        val diffBundle = Bundle()
+
+        if (oldItem.userReaction != newItem.userReaction) {
+            diffBundle.putBoolean("reaction_changed", true)
+        }
+        if (oldItem.reactionCount != newItem.reactionCount) {
+            diffBundle.putBoolean("reaction_count_changed", true)
+        }
+        if (oldItem.isReactionsPopUpVisible != newItem.isReactionsPopUpVisible) {
+            diffBundle.putBoolean("popup_visibility_changed", true)
+        }
+
+        return if (diffBundle.isEmpty) null else diffBundle
+    }
 }
 
 class PostsAdapter(
-    private val reactionBtnClick: (postId: String, reactionType: PostReactionType) -> Unit,
+    private val updateUserReaction: (postId: String, reactionType: PostReactionType) -> Unit,
     private val reactionBtnHold: (postId: String, visible: Boolean) -> Unit
 ) : ListAdapter<PostPresentation, PostsAdapter.PostViewHolder>(PostsDiffUtil()) {
     inner class PostViewHolder(private val binding: ItemPostBinding) :
@@ -51,29 +68,63 @@ class PostsAdapter(
                     itemView.context,
                     R.color.md_theme_onSurfaceVariant
                 )
-
                 ivReactionIcon.setColorFilter(tint)
-
-                // animate once reaction is changed
-                if (post.wasReactionJustChanged) {
-                    ivReactionIcon.animateSelected()
-                }
-
-                // Handle Reaction
-                btnReaction.setOnClickListener {
-                    if (post.userReaction == PostReactionType.NONE) {
-                        reactionBtnClick(post.id, PostReactionType.FIRE)
-                    } else {
-                        reactionBtnClick(post.id, PostReactionType.NONE)
-                    }
-                }
 
                 btnReaction.setOnLongClickListener {
                     reactionBtnHold(post.id, true)
                     true
                 }
 
+                // Handle Reaction
+                btnReaction.setOnClickListener {
+                    val selectedReaction = if (post.userReaction == PostReactionType.NONE)
+                        PostReactionType.FIRE
+                    else
+                        PostReactionType.NONE
+                    updateUserReaction(post.id, selectedReaction)
+                }
+
                 setUpReactionPopupListeners(binding = binding, post = post)
+            }
+        }
+
+        fun updatePartial(post: PostPresentation, payload: Bundle) {
+            payload.apply {
+                binding.apply {
+                    if (getBoolean("reaction_changed") || getBoolean("reaction_count_changed")) {
+
+                        ivReactionIcon.animateSelected()
+                        ivReactionIcon.setImageResource(post.userReaction.iconRes)
+                        tvReactionsCount.text = post.reactionCount.toString()
+                        tvCommentsCount.text = post.commentCount.toString()
+
+                        val tint = if (post.userReaction != PostReactionType.NONE)
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.md_theme_tertiary
+                            ) else ContextCompat.getColor(
+                            itemView.context,
+                            R.color.md_theme_onSurfaceVariant
+                        )
+                        ivReactionIcon.setColorFilter(tint)
+
+                        tvReactionsCount.text = post.reactionCount.toString()
+                        ivReactionIcon.animateSelected()
+
+                        // Handle Reaction
+                        btnReaction.setOnClickListener {
+                            val selectedReaction = if (post.userReaction == PostReactionType.NONE)
+                                PostReactionType.FIRE
+                            else
+                                PostReactionType.NONE
+                            updateUserReaction(post.id, selectedReaction)
+                        }
+                    }
+                }
+
+                if (getBoolean("popup_visibility_changed")) {
+                    binding.reactionPopup.isVisible = post.isReactionsPopUpVisible
+                }
             }
         }
     }
@@ -121,7 +172,7 @@ class PostsAdapter(
                         v.performClick()
                         // User lifted finger → confirm selection
                         if (hoveredReaction != PostReactionType.NONE) {
-                            reactionBtnClick(post.id, hoveredReaction)
+                            updateUserReaction(post.id, hoveredReaction)
                         }
 
                         // Hide popup
@@ -159,8 +210,19 @@ class PostsAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.onBind(
-            post = getItem(position)
-        )
+        holder.onBind(getItem(position))
+    }
+
+
+    override fun onBindViewHolder(holder: PostViewHolder, position: Int, payloads: List<Any>) {
+        val post = getItem(position)
+
+
+        if (payloads.isNotEmpty()) {
+            val payload = payloads[0] as? Bundle ?: return
+            holder.updatePartial(post = post, payload)
+        } else {
+            holder.onBind(post)
+        }
     }
 }

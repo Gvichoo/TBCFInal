@@ -4,6 +4,8 @@ import com.tbacademy.nextstep.domain.usecase.goal.CreateGoalUseCase
 import com.tbacademy.nextstep.domain.usecase.goal.CreateGoalUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.post.GetPostsUseCase
 import com.tbacademy.nextstep.domain.usecase.post.GetPostsUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.reaction.CreateReactionUseCase
+import com.tbacademy.nextstep.domain.usecase.reaction.CreateReactionUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.userSession.ClearValueFromLocalStorageUseCase
 import com.tbacademy.nextstep.domain.usecase.userSession.ClearValueFromLocalStorageUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.userSession.ReadValueFromLocalStorageUseCase
@@ -98,6 +100,10 @@ interface UseCaseModule {
     @Singleton
     @Binds
     fun bindValidateMetricUnitUseCase(impl : ValidateMetricUnitUseCaseImpl) : ValidateMetricUnitUseCase
+
+    @Singleton
+    @Binds
+    fun bindCreateReactionUseCale(impl: CreateReactionUseCaseImpl): CreateReactionUseCase
 
 
 }

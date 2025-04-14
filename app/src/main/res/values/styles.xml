@@ -9,4 +9,13 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item> <!-- or 8dp, or whatever radius you like -->
     </style>
+
+    <style name="ReactionIconStyle">
+        <item name="android:layout_width">36dp</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
 </resources>

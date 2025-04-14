@@ -136,10 +136,9 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivReactionIcon"
             android:layout_width="36dp"
-            android:alpha="0.7"
             android:layout_height="36dp"
-            android:src="@drawable/ic_flame"
-            android:scaleType="centerInside" />
+            android:src="@drawable/ic_reaction_fire_24px"
+            android:scaleType="fitCenter" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvReactionText"
@@ -148,6 +147,73 @@
             android:text="React"
             android:textSize="12sp"
             android:layout_marginTop="4dp" />
+    </LinearLayout>
+
+<!--    Multiple reaction types-->
+
+    <LinearLayout
+        android:id="@+id/reactionPopup"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_reaction_popup"
+        app:layout_constraintBottom_toTopOf="@id/btnReaction"
+        app:layout_constraintStart_toStartOf="@id/btnReaction"
+        app:layout_constraintEnd_toEndOf="@id/btnComment"
+        android:layout_gravity="center_horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/reactionFire"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/distance_xs"
+            android:src="@drawable/ic_reaction_fire_24px"
+            android:background="@drawable/bg_reaction_fire"
+            android:layout_marginEnd="@dimen/distance_sm"
+            android:padding="4dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/reactionHeart"
+            android:layout_width="36dp"
+            android:layout_gravity="center"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_reaction_heart_24px"
+            android:background="@drawable/bg_reaction_heart"
+            android:layout_marginEnd="@dimen/distance_sm"
+            android:padding="4dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/reactionCookie"
+            android:layout_width="36dp"
+            android:layout_gravity="center"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_reaction_cookie_24px"
+            android:background="@drawable/bg_reaction_cookie"
+            android:layout_marginEnd="@dimen/distance_sm"
+            android:padding="4dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/reactionCheer"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_reaction_cheer_24px"
+            android:background="@drawable/bg_reaction_cheer"
+            android:layout_marginEnd="@dimen/distance_sm"
+            android:padding="4dp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/reactionTask"
+            android:background="@drawable/bg_reaction_task"
+            android:layout_marginEnd="@dimen/distance_xs"
+            android:layout_width="36dp"
+            android:layout_gravity="center"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_reaction_task_24px"
+            android:padding="4dp" />
+
     </LinearLayout>
 
 <!--    Comment Btn -->
@@ -170,9 +236,8 @@
             android:id="@+id/ivCommentIcon"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            app:tint="@color/md_theme_primary"
-            android:src="@drawable/ic_comment"
-            android:scaleType="centerInside" />
+            android:src="@drawable/ic_comment_24px"
+            android:scaleType="fitCenter" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCommentText"

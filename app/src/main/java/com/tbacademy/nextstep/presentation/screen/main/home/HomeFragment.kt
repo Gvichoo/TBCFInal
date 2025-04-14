@@ -18,8 +18,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private val postsAdapter: PostsAdapter by lazy {
         PostsAdapter(
-            reactionBtnClick = { postId ->
-                homeViewModel.onEvent(event = HomeEvent.ReactToPost(postId = postId))
+            updateUserReaction = { postId, reactionType ->
+                homeViewModel.onEvent(event = HomeEvent.ReactToPost(postId = postId, reactionType = reactionType))
+            },
+            reactionBtnHold = { postId, visible ->
+                homeViewModel.onEvent(event = HomeEvent.ToggleReactionsSelector(postId = postId, visible = visible))
             }
         )
     }
@@ -42,7 +45,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun observeState() {
         collectLatest(flow = homeViewModel.state) { state ->
-            postsAdapter.submitList(state.posts)
+            if (state.posts != null) {
+                postsAdapter.submitList(state.posts)
+            }
             binding.pbPosts.isVisible = state.isLoading
 
             Log.d("HOME_STATE", "$state")

@@ -9,6 +9,7 @@ data class PostPresentation(
     val reactionCount: Int,
     val commentCount: Int,
     val type: String,
+    val imageUrl: String? = null,
     val createdAt: String,
     val userReaction: PostReactionType = PostReactionType.NONE,
     val isReactionsPopUpVisible: Boolean = false,

@@ -13,5 +13,6 @@ data class PostDto(
     val commentCount: Int = 0,
     val referenceType: String = "",
     val referenceId: String = "",
+    val imageUrl: String = "",
     val createdAt: Timestamp = Timestamp(Date())
 )

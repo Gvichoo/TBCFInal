@@ -13,6 +13,7 @@ fun PostDto.toDomain(): Post {
         type = referenceType,
         commentCount = commentCount,
         reactionCount = reactionCount,
+        imageUrl = imageUrl,
         createdAt = createdAt.toDate()
     )
 }

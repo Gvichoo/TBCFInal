@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.databinding.ItemPostBinding
 import com.tbacademy.nextstep.presentation.common.extension.animateSelected
+import com.tbacademy.nextstep.presentation.extension.loadImagesGlide
 import com.tbacademy.nextstep.presentation.screen.main.home.model.PostPresentation
 import com.tbacademy.nextstep.presentation.screen.main.home.model.PostReactionType
 
@@ -59,6 +60,9 @@ class PostsAdapter(
                 tvCommentsCount.text = post.commentCount.toString()
                 ivReactionIcon.setImageResource(post.userReaction.iconRes)
                 reactionPopup.isVisible = post.isReactionsPopUpVisible
+                
+                post.imageUrl?.let { ivPostImage.loadImagesGlide(url = it) }
+
 
                 val tint = if (post.userReaction != PostReactionType.NONE)
                     ContextCompat.getColor(

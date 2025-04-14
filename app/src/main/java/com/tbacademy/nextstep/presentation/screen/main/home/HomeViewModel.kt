@@ -98,14 +98,12 @@ class HomeViewModel @Inject constructor(
 //    Api Calls
 
     private fun getGlobalPosts() {
-        if (state.value.posts == null) {
-            viewModelScope.launch {
-                getPostsUseCase().collectLatest { resource ->
-                    when (resource) {
-                        is Resource.Loading -> updateState { this.copy(isLoading = resource.loading) }
-                        is Resource.Success -> updateState { this.copy(posts = resource.data.map { it.toPresentation() }) }
-                        is Resource.Error -> updateState { this.copy(error = resource.error) }
-                    }
+        viewModelScope.launch {
+            getPostsUseCase().collectLatest { resource ->
+                when (resource) {
+                    is Resource.Loading -> updateState { this.copy(isLoading = resource.loading) }
+                    is Resource.Success -> updateState { this.copy(posts = resource.data.map { it.toPresentation() }) }
+                    is Resource.Error -> updateState { this.copy(error = resource.error) }
                 }
             }
         }

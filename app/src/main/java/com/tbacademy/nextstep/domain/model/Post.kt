@@ -11,5 +11,6 @@ data class Post(
     val reactionCount: Int,
     val commentCount: Int,
     val type: String,
+    val imageUrl: String? = null,
     val createdAt: Date
 )

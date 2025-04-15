@@ -38,6 +38,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         collect(flow = loginViewModel.state) { state ->
             binding.apply {
                 loaderLogin.loaderContainer.isVisible = state.isLoading
+                overlayBlocker.isVisible = state.isLoading
 
                 tlEmail.error = state.emailErrorMessage?.let { getString(it) }
                 tlPassword.error = state.passwordErrorMessage?.let { getString(it) }

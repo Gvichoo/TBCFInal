@@ -1,7 +1,9 @@
 package com.tbacademy.nextstep.presentation.screen.main.settings
 
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.databinding.FragmentSettingsBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
 import com.tbacademy.nextstep.presentation.extension.collect
@@ -40,8 +42,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
     }
 
     private fun navigateToLogin() {
-        findNavController().navigate(
-            MainFragmentDirections.actionMainFragmentToLoginFragment()
-        )
+        val navController = requireActivity().findNavController(R.id.fragmentContainerView)
+        val action = MainFragmentDirections.actionMainFragmentToLoginFragment()
+        navController.navigate(action)
     }
 }

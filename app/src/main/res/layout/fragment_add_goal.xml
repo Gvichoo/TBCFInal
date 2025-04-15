@@ -133,24 +133,26 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSelectImage"
-        android:layout_width="180dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/distance_sm"
-        android:text="Choose Image"
+        android:text="Add Image"
         android:layout_marginStart="@dimen/distance_sm"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image" />
 
+
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancelImage"
-        android:layout_width="180dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/distance_sm"
-        android:layout_marginEnd="@dimen/distance_sm"
         android:text="Cancel"
+        android:layout_marginEnd="@dimen/distance_sm"
         android:enabled="false"
+        app:layout_constraintTop_toTopOf="@id/btnSelectImage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image" />
+         />
 
 
     <com.google.android.material.button.MaterialButton
@@ -164,7 +166,16 @@
         android:textSize="@dimen/body_regular"
         app:layout_constraintEnd_toEndOf="@id/tlGoalTitle"
         app:layout_constraintStart_toStartOf="@id/tlGoalTitle"
-        app:layout_constraintTop_toBottomOf="@id/btnSelectImage" />
+        app:layout_constraintTop_toBottomOf="@id/btnCancelImage" />
+
+    <View
+        android:id="@+id/overlayBlocker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
 
 
     <include

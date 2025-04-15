@@ -9,12 +9,14 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.databinding.FragmentAddGoalBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
 import com.tbacademy.nextstep.presentation.extension.collect
@@ -24,6 +26,7 @@ import com.tbacademy.nextstep.presentation.screen.main.add.effect.AddGoalEffect
 import com.tbacademy.nextstep.presentation.screen.main.add.event.AddGoalEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -36,21 +39,26 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
     private lateinit var pickMediaLauncher: ActivityResultLauncher<PickVisualMediaRequest>
 
+    private lateinit var cameraLauncher: ActivityResultLauncher<Uri>
+    private lateinit var permissionLauncher: ActivityResultLauncher<String>
+    private var cameraImageUri: Uri? = null
+
 
     @SuppressLint("DefaultLocale")
     override fun start() {
         initMediaPickerLauncher()
-        setPickPictureBtnListener()
         setDatePicker()
-    }
 
+        initCameraLauncher()
+    }
 
 
     override fun listeners() {
         setInputListeners()
         setSubmitBtnListener()
         setSwitchListener()
-        setDeleteImageBtnListener()
+        setDeleteImageButtonListener()
+        setSelectImageButtonListener()
     }
 
     override fun observers() {
@@ -61,26 +69,27 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
     }
 
-    private fun observeState(){
-        collect(addGoalViewModel.state){state ->
-           binding.apply {
-               loaderAddGoal.loaderContainer.isVisible = state.isLoading
+    private fun observeState() {
+        collect(flow = addGoalViewModel.state) { state ->
+            binding.apply {
+                loaderAddGoal.loaderContainer.isVisible = state.isLoading
+                overlayBlocker.isVisible = state.isLoading
 
-               tlGoalTitle.error = state.goalTitleErrorMessage?.let { getString(it) }
-               tlGoalDescription.error = state.goalDescriptionErrorMessage?.let { getString(it) }
-               tlTargetDate.error = state.goalDateErrorMessage?.let { getString(it) }
-               tlMetricUnit.error = state.goalMetricUnitErrorMessage?.let { getString(it) }
-               tlMetricTarget.error = state.goalMetricTargetErrorMessage?.let { getString(it) }
+                tlGoalTitle.error = state.goalTitleErrorMessage?.let { getString(it) }
+                tlGoalDescription.error = state.goalDescriptionErrorMessage?.let { getString(it) }
+                tlTargetDate.error = state.goalDateErrorMessage?.let { getString(it) }
+                tlMetricUnit.error = state.goalMetricUnitErrorMessage?.let { getString(it) }
+                tlMetricTarget.error = state.goalMetricTargetErrorMessage?.let { getString(it) }
 
 
-               btnCreateGoal.isEnabled = state.isCreateGoalEnabled
+                btnCreateGoal.isEnabled = state.isCreateGoalEnabled
 
-           }
+            }
         }
     }
 
-    private fun observeUiState(){
-        collect(addGoalViewModel.uiState){ uiState ->
+    private fun observeUiState() {
+        collect(flow = addGoalViewModel.uiState) { uiState ->
             binding.apply {
                 metricInputContainer.isVisible = uiState.isMetricEnabled
 
@@ -93,9 +102,9 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
         }
     }
 
-    private fun observeEffects(){
-        collectLatest(addGoalViewModel.effects){effects ->
-            when(effects){
+    private fun observeEffects() {
+        collectLatest(flow = addGoalViewModel.effects) { effects ->
+            when (effects) {
                 AddGoalEffect.NavToHomeFragment -> navToHomeFragment()
                 is AddGoalEffect.ShowError -> showMessage(effects.message)
                 AddGoalEffect.LaunchMediaPicker -> launchImagePicker()
@@ -104,30 +113,83 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
     }
 
 
-    private fun initMediaPickerLauncher() {
-        pickMediaLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            uri?.let {
-                addGoalViewModel.onEvent(AddGoalEvent.ImageSelected(it))
-                binding.image.setImageURI(it)
-                binding.btnCancelImage.isEnabled = true
+    private fun initCameraLauncher() {
+        // Permission launcher
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+                openCamera()
             }
+        }
+
+        // Camera launcher
+        cameraLauncher =
+            registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+                if (success) {
+                    cameraImageUri?.let {
+                        binding.image.setImageURI(it)
+                        addGoalViewModel.onEvent(AddGoalEvent.ImageSelected(it))
+                        binding.btnCancelImage.isEnabled = true
+                    }
+                }
+            }
+    }
+
+    private fun setSelectImageButtonListener() {
+        binding.btnSelectImage.setOnClickListener {
+            showImagePickerDialog()
         }
     }
 
-    private fun setDeleteImageBtnListener() {
+    private fun showImagePickerDialog() {
+        val options = arrayOf("Camera", "Gallery")
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Select Image")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> checkCameraPermissionAndLaunch()
+                    1 -> addGoalViewModel.onEvent(AddGoalEvent.PickImageClicked)
+                }
+            }.show()
+    }
+
+    private fun checkCameraPermissionAndLaunch() {
+        permissionLauncher.launch(android.Manifest.permission.CAMERA)
+    }
+
+    private fun openCamera() {
+        val imageFile = File(
+            requireContext().externalCacheDir,
+            "camera_image_${System.currentTimeMillis()}.jpg"
+        )
+        cameraImageUri = FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.provider",
+            imageFile
+        )
+        cameraImageUri?.let { uri ->
+            cameraLauncher.launch(uri)
+        }
+    }
+
+
+    private fun initMediaPickerLauncher() {
+        pickMediaLauncher =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                uri?.let {
+                    addGoalViewModel.onEvent(AddGoalEvent.ImageSelected(it))
+                    binding.image.setImageURI(it)
+                    binding.btnCancelImage.isEnabled = true
+                }
+            }
+    }
+
+    private fun setDeleteImageButtonListener() {
         binding.btnCancelImage.setOnClickListener {
-//          binding.image.setImageResource(R.drawable.placeholder_image)
             binding.image.setImageDrawable(null)
             addGoalViewModel.onEvent(AddGoalEvent.ImageCleared)
             binding.btnCancelImage.isEnabled = false
-        }
-    }
-
-
-
-    private fun setPickPictureBtnListener() {
-        binding.btnSelectImage.setOnClickListener {
-            addGoalViewModel.onEvent(AddGoalEvent.PickImageClicked)
         }
     }
 
@@ -164,7 +226,7 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
     }
 
 
-    private fun setInputListeners(){
+    private fun setInputListeners() {
         setTitleInputListener()
         setDescriptionInputListener()
         setDateInputListener()
@@ -174,12 +236,12 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
     private fun setMetricTargetInputListener() {
         binding.etMetricTarget.onTextChanged { metricTarget ->
-                addGoalViewModel.onEvent(AddGoalEvent.GoalMetricTargetChanged(metricTarget = metricTarget))
+            addGoalViewModel.onEvent(AddGoalEvent.GoalMetricTargetChanged(metricTarget = metricTarget))
         }
     }
 
 
-    private fun setMetricUnitInputListener(){
+    private fun setMetricUnitInputListener() {
         binding.etMetricUnit.onTextChanged { metricUnit ->
             addGoalViewModel.onEvent(AddGoalEvent.GoalMetricUnitChanged(metricUnit = metricUnit))
         }
@@ -232,7 +294,7 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
     }
 
 
-    private fun navToHomeFragment(){
+    private fun navToHomeFragment() {
         findNavController().navigate(
             AddGoalFragmentDirections.actionNavAddToNavHome()
         )

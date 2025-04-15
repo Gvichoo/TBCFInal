@@ -126,6 +126,14 @@
             android:textSize="@dimen/body_regular" />
     </LinearLayout>
 
+    <View
+        android:id="@+id/overlayBlocker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
 
     <include
         android:id="@+id/loaderLogin"

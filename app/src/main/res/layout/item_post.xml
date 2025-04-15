@@ -22,10 +22,10 @@
         android:id="@+id/btn_follow"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="@id/ivProfile"
+        android:text="+ Follow"
         app:layout_constraintBottom_toBottomOf="@id/ivProfile"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="+ Follow" />
+        app:layout_constraintTop_toTopOf="@id/ivProfile" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvAuthor"
@@ -49,119 +49,151 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/ivProfile"
         android:layout_marginTop="@dimen/distance_sm"
         android:text="Write new misery novel"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivProfile" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivPostImage"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
         android:layout_marginTop="@dimen/distance_sm"
+        android:scaleType="centerCrop"
         android:src="@color/md_theme_tertiary"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:shapeAppearanceOverlay="@style/RoundedImageShape" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvDescription"
-        app:layout_constraintTop_toBottomOf="@id/ivPostImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/distance_sm"
         android:text="@string/paul_sheldon_goal"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivPostImage" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvReactions"
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flowReactions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/distance_sm"
+        android:layout_marginTop="@dimen/distance_md"
+        app:constraint_referenced_ids="ivReaction1,ivReaction2,ivReaction3"
+        app:flow_horizontalAlign="start"
+        app:flow_horizontalGap="-6dp"
+        app:flow_wrapMode="chain"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="Reactions:"
         app:layout_constraintTop_toBottomOf="@id/tvDescription" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivReaction1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_reaction_fire"
+        android:src="@drawable/ic_reaction_fire_24px"
+        android:translationZ="2dp"
+        android:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivReaction2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_reaction_heart"
+        android:src="@drawable/ic_reaction_heart_24px"
+        android:translationZ="1dp"
+        android:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivReaction3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_reaction_cookie"
+        android:src="@drawable/ic_reaction_cookie_24px"
+        android:visibility="gone" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvReactionsCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/tvReactions"
-        app:layout_constraintBottom_toBottomOf="@id/tvReactions"
+        android:layout_marginStart="@dimen/distance_xs"
         android:text="0"
-        android:layout_marginStart="@dimen/distance_xs" />
+        app:layout_constraintBottom_toBottomOf="@id/ivReaction1"
+        app:layout_constraintStart_toEndOf="@id/flowReactions"
+        app:layout_constraintTop_toTopOf="@id/ivReaction1" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvComments"
-        android:text="Comments:"
-        app:layout_constraintEnd_toStartOf="@id/tvCommentsCount"
-        app:layout_constraintBottom_toBottomOf="@id/tvReactions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/distance_xs"/>
+        android:layout_marginEnd="@dimen/distance_xs"
+        android:text="Comments:"
+        app:layout_constraintBottom_toBottomOf="@id/ivReaction1"
+        app:layout_constraintEnd_toStartOf="@id/tvCommentsCount" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvCommentsCount"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/tvReactions"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="0"
-        android:layout_height="wrap_content" />
+        app:layout_constraintBottom_toBottomOf="@id/ivReaction1"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <View
         android:id="@+id/viewDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="@dimen/distance_sm"
         android:background="@color/md_theme_primary"
-        app:layout_constraintTop_toBottomOf="@id/tvReactions"
-        android:layout_marginTop="@dimen/distance_sm" />
+        app:layout_constraintTop_toBottomOf="@id/ivReaction1" />
 
-<!--    React Btn   -->
+    <!--    React Btn   -->
     <LinearLayout
         android:id="@+id/btnReaction"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@id/btnComment"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true"
         android:layout_marginTop="@dimen/distance_sm"
         android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintTop_toBottomOf="@id/viewDivider"
-        app:layout_constraintStart_toStartOf="@id/tvDescription">
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/btnComment"
+        app:layout_constraintStart_toStartOf="@id/tvDescription"
+        app:layout_constraintTop_toBottomOf="@id/viewDivider">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivReactionIcon"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:src="@drawable/ic_reaction_fire_24px"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_reaction_fire_24px" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvReactionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="React"
-            android:textSize="12sp"
-            android:layout_marginTop="4dp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
-<!--    Multiple reaction types-->
+    <!--    Multiple reaction types-->
 
     <LinearLayout
         android:id="@+id/reactionPopup"
         android:layout_width="wrap_content"
+        android:translationZ="4dp"
         android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="8dp"
-        android:orientation="horizontal"
         android:background="@drawable/bg_reaction_popup"
+        android:orientation="horizontal"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/btnReaction"
-        app:layout_constraintStart_toStartOf="@id/btnReaction"
         app:layout_constraintEnd_toEndOf="@id/btnComment"
-        android:layout_gravity="center_horizontal">
+        app:layout_constraintStart_toStartOf="@id/btnReaction">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/reactionFire"
@@ -169,83 +201,83 @@
             android:layout_height="36dp"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/distance_xs"
-            android:src="@drawable/ic_reaction_fire_24px"
-            android:background="@drawable/bg_reaction_fire"
             android:layout_marginEnd="@dimen/distance_sm"
-            android:padding="4dp" />
+            android:background="@drawable/bg_reaction_fire"
+            android:padding="4dp"
+            android:src="@drawable/ic_reaction_fire_24px" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/reactionHeart"
             android:layout_width="36dp"
-            android:layout_gravity="center"
             android:layout_height="36dp"
-            android:src="@drawable/ic_reaction_heart_24px"
-            android:background="@drawable/bg_reaction_heart"
+            android:layout_gravity="center"
             android:layout_marginEnd="@dimen/distance_sm"
-            android:padding="4dp" />
+            android:background="@drawable/bg_reaction_heart"
+            android:padding="4dp"
+            android:src="@drawable/ic_reaction_heart_24px" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/reactionCookie"
             android:layout_width="36dp"
-            android:layout_gravity="center"
             android:layout_height="36dp"
-            android:src="@drawable/ic_reaction_cookie_24px"
-            android:background="@drawable/bg_reaction_cookie"
+            android:layout_gravity="center"
             android:layout_marginEnd="@dimen/distance_sm"
-            android:padding="4dp" />
+            android:background="@drawable/bg_reaction_cookie"
+            android:padding="4dp"
+            android:src="@drawable/ic_reaction_cookie_24px" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/reactionCheer"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_reaction_cheer_24px"
-            android:background="@drawable/bg_reaction_cheer"
             android:layout_marginEnd="@dimen/distance_sm"
-            android:padding="4dp" />
+            android:background="@drawable/bg_reaction_cheer"
+            android:padding="4dp"
+            android:src="@drawable/ic_reaction_cheer_24px" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/reactionTask"
-            android:background="@drawable/bg_reaction_task"
-            android:layout_marginEnd="@dimen/distance_xs"
             android:layout_width="36dp"
-            android:layout_gravity="center"
             android:layout_height="36dp"
-            android:src="@drawable/ic_reaction_task_24px"
-            android:padding="4dp" />
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/distance_xs"
+            android:background="@drawable/bg_reaction_task"
+            android:padding="4dp"
+            android:src="@drawable/ic_reaction_task_24px" />
 
     </LinearLayout>
 
-<!--    Comment Btn -->
+    <!--    Comment Btn -->
 
     <LinearLayout
         android:id="@+id/btnComment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true"
         android:layout_marginTop="@dimen/distance_sm"
         android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintTop_toBottomOf="@id/viewDivider"
-        app:layout_constraintStart_toEndOf="@id/btnReaction">
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnReaction"
+        app:layout_constraintTop_toBottomOf="@id/viewDivider">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivCommentIcon"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:src="@drawable/ic_comment_24px"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_comment_24px" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCommentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="Comment"
-            android:textSize="12sp"
-            android:layout_marginTop="4dp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

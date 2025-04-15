@@ -1,4 +1,4 @@
-package com.tbacademy.nextstep.domain.mapper
+package com.tbacademy.nextstep.data.common.mapper
 
 import com.tbacademy.nextstep.data.remote.dto.PostDto
 import com.tbacademy.nextstep.domain.model.Post
@@ -13,6 +13,11 @@ fun PostDto.toDomain(): Post {
         type = referenceType,
         commentCount = commentCount,
         reactionCount = reactionCount,
+        reactionFireCount = reactionFireCount,
+        reactionHeartCount = reactionHeartCount,
+        reactionCookieCount = reactionCookieCount,
+        reactionCheerCount = reactionCheerCount,
+        reactionTaskCount = reactionTaskCount,
         imageUrl = imageUrl,
         createdAt = createdAt.toDate()
     )

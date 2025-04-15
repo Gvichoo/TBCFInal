@@ -15,6 +15,7 @@ import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.databinding.ItemPostBinding
 import com.tbacademy.nextstep.presentation.common.extension.animateSelected
 import com.tbacademy.nextstep.presentation.extension.loadImagesGlide
+import com.tbacademy.nextstep.presentation.screen.main.home.extension.topReactions
 import com.tbacademy.nextstep.presentation.screen.main.home.model.PostPresentation
 import com.tbacademy.nextstep.presentation.screen.main.home.model.PostReactionType
 
@@ -50,6 +51,7 @@ class PostsAdapter(
 ) : ListAdapter<PostPresentation, PostsAdapter.PostViewHolder>(PostsDiffUtil()) {
     inner class PostViewHolder(private val binding: ItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun onBind(post: PostPresentation) {
             binding.apply {
                 tvAuthor.text = post.authorUsername
@@ -60,24 +62,20 @@ class PostsAdapter(
                 tvCommentsCount.text = post.commentCount.toString()
                 ivReactionIcon.setImageResource(post.userReaction.iconRes)
                 reactionPopup.isVisible = post.isReactionsPopUpVisible
-                
+                tvReactionText.text = itemView.context.getString(post.userReaction.titleRes)
+
                 post.imageUrl?.let { ivPostImage.loadImagesGlide(url = it) }
-
-
-                val tint = if (post.userReaction != PostReactionType.NONE)
-                    ContextCompat.getColor(
-                        itemView.context,
-                        R.color.md_theme_tertiary
-                    ) else ContextCompat.getColor(
-                    itemView.context,
-                    R.color.md_theme_onSurfaceVariant
-                )
-                ivReactionIcon.setColorFilter(tint)
 
                 btnReaction.setOnLongClickListener {
                     reactionBtnHold(post.id, true)
                     true
                 }
+
+
+                // Set Reactions
+                setTopReactionsUI(post = post)
+                // Set Color of active Reaction
+                updateReactionTint(post = post)
 
                 // Handle Reaction
                 btnReaction.setOnClickListener {
@@ -97,23 +95,20 @@ class PostsAdapter(
                 binding.apply {
                     if (getBoolean("reaction_changed") || getBoolean("reaction_count_changed")) {
 
+                        // Set Reaction
                         ivReactionIcon.animateSelected()
                         ivReactionIcon.setImageResource(post.userReaction.iconRes)
+                        tvReactionText.text = itemView.context.getString(post.userReaction.titleRes)
+
+                        // Set Reactions
+                        setTopReactionsUI(post = post)
+
+                        // Set Color of active Reaction
+                        updateReactionTint(post = post)
+
+                        // Set Reaction and comment count
                         tvReactionsCount.text = post.reactionCount.toString()
                         tvCommentsCount.text = post.commentCount.toString()
-
-                        val tint = if (post.userReaction != PostReactionType.NONE)
-                            ContextCompat.getColor(
-                                itemView.context,
-                                R.color.md_theme_tertiary
-                            ) else ContextCompat.getColor(
-                            itemView.context,
-                            R.color.md_theme_onSurfaceVariant
-                        )
-                        ivReactionIcon.setColorFilter(tint)
-
-                        tvReactionsCount.text = post.reactionCount.toString()
-                        ivReactionIcon.animateSelected()
 
                         // Handle Reaction
                         btnReaction.setOnClickListener {
@@ -130,6 +125,35 @@ class PostsAdapter(
                     binding.reactionPopup.isVisible = post.isReactionsPopUpVisible
                 }
             }
+        }
+
+        private fun setTopReactionsUI(post: PostPresentation) = with(binding) {
+            val topReactions = post.topReactions()
+
+            ivReaction1.setImageResource(
+                topReactions.getOrNull(0)?.first?.iconRes ?: PostReactionType.NONE.iconRes
+            )
+            ivReaction1.setBackgroundResource(
+                topReactions.getOrNull(0)?.first?.backgroundRes
+                    ?: PostReactionType.NONE.backgroundRes
+            )
+
+            ivReaction2.isVisible = topReactions.size > 1
+            ivReaction2.setImageResource(topReactions.getOrNull(1)?.first?.iconRes ?: 0)
+            ivReaction2.setBackgroundResource(topReactions.getOrNull(1)?.first?.backgroundRes ?: 0)
+
+            ivReaction3.isVisible = topReactions.size > 2
+            ivReaction3.setImageResource(topReactions.getOrNull(2)?.first?.iconRes ?: 0)
+            ivReaction3.setBackgroundResource(topReactions.getOrNull(2)?.first?.backgroundRes ?: 0)
+        }
+
+        private fun updateReactionTint(post: PostPresentation) = with(binding) {
+            val tint = if (post.userReaction != PostReactionType.NONE)
+                ContextCompat.getColor(itemView.context, R.color.md_theme_tertiary)
+            else
+                ContextCompat.getColor(itemView.context, R.color.md_theme_onSurfaceVariant)
+
+            ivReactionIcon.setColorFilter(tint)
         }
     }
 
@@ -210,18 +234,19 @@ class PostsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding: ItemPostBinding =
             ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
         return PostViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+
+
         holder.onBind(getItem(position))
     }
 
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int, payloads: List<Any>) {
         val post = getItem(position)
-
-
         if (payloads.isNotEmpty()) {
             val payload = payloads[0] as? Bundle ?: return
             holder.updatePartial(post = post, payload)

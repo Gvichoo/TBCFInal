@@ -19,7 +19,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val postsAdapter: PostsAdapter by lazy {
         PostsAdapter(
             updateUserReaction = { postId, reactionType ->
-                homeViewModel.onEvent(event = HomeEvent.ReactToPost(postId = postId, reactionType = reactionType))
+                homeViewModel.onEvent(event = HomeEvent.HandleReactToPost(postId = postId, reactionType = reactionType))
             },
             reactionBtnHold = { postId, visible ->
                 homeViewModel.onEvent(event = HomeEvent.ToggleReactionsSelector(postId = postId, visible = visible))

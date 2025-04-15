@@ -3,16 +3,15 @@ package com.tbacademy.nextstep.presentation.screen.main.home
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.domain.core.Resource
-import com.tbacademy.nextstep.domain.model.Reaction
 import com.tbacademy.nextstep.domain.usecase.post.GetPostsUseCase
 import com.tbacademy.nextstep.domain.usecase.reaction.CreateReactionUseCase
 import com.tbacademy.nextstep.presentation.base.BaseViewModel
 import com.tbacademy.nextstep.presentation.common.mapper.toMessageRes
-import com.tbacademy.nextstep.presentation.extension.incrementIf
+import com.tbacademy.nextstep.presentation.extension.adjustCount
 import com.tbacademy.nextstep.presentation.screen.main.home.effect.HomeEffect
 import com.tbacademy.nextstep.presentation.screen.main.home.event.HomeEvent
-import com.tbacademy.nextstep.presentation.screen.main.home.mapper.toPresentation
 import com.tbacademy.nextstep.presentation.screen.main.home.mapper.toDomain
+import com.tbacademy.nextstep.presentation.screen.main.home.mapper.toPresentation
 import com.tbacademy.nextstep.presentation.screen.main.home.model.PostReactionType
 import com.tbacademy.nextstep.presentation.screen.main.home.state.HomeState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +34,7 @@ class HomeViewModel @Inject constructor(
     override fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.FetchGlobalPosts -> getGlobalPosts()
-            is HomeEvent.ReactToPost -> reactToPost(
+            is HomeEvent.HandleReactToPost -> reactToPost(
                 id = event.postId,
                 newReaction = event.reactionType
             )
@@ -47,67 +46,57 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun reactToPost(id: String, newReaction: PostReactionType) {
-        state.value.posts?.let { posts ->
-            val updatedPosts = posts.map { post ->
-                if (post.id != id) return@map post
+    private fun reactToPost(id: String, newReaction: PostReactionType?) {
+        Log.d("REACT_TO_POST_VIEWMODEL", "$newReaction")
+        val updatedPosts = state.value.posts?.map { post ->
+            if (post.id != id) return@map post
 
-                val oldReaction = post.userReaction
+            val oldReaction = post.userReaction
 
-                // If post was not reacted and react is not NONE (is not removed)
-                val isAdding =
-                    oldReaction == PostReactionType.NONE && newReaction != PostReactionType.NONE
+            val isAdding = oldReaction == null && newReaction != null
+            val isRemoving = oldReaction != null && newReaction == null
 
-                // If post was reacted and new react is received NONE
-                val isRemoving =
-                    oldReaction != PostReactionType.NONE && newReaction == PostReactionType.NONE
-
-                // Is post was reacted and being reacted by new non NONE react
-                val isSwitching =
-                    oldReaction != newReaction && oldReaction != PostReactionType.NONE && newReaction != PostReactionType.NONE
-
-                val updatedReactionCount = when {
-                    isAdding -> post.reactionCount + 1
-                    isRemoving -> post.reactionCount - 1
-                    else -> post.reactionCount
-                }
-
-                post.copy(
-                    userReaction = newReaction,
-                    reactionCount = updatedReactionCount,
-                    reactionFireCount = post.reactionFireCount.incrementIf(
-                        oldReaction == PostReactionType.FIRE,
-                        newReaction == PostReactionType.FIRE
-                    ),
-                    reactionHeartCount = post.reactionHeartCount
-                        .incrementIf(
-                            oldReaction == PostReactionType.HEART,
-                            newReaction == PostReactionType.HEART
-                        ),
-                    reactionCookieCount = post.reactionCookieCount
-                        .incrementIf(
-                            oldReaction == PostReactionType.COOKIE,
-                            newReaction == PostReactionType.COOKIE
-                        ),
-                    reactionCheerCount = post.reactionCheerCount
-                        .incrementIf(
-                            oldReaction == PostReactionType.CHEER,
-                            newReaction == PostReactionType.CHEER
-                        ),
-                    reactionTaskCount = post.reactionTaskCount
-                        .incrementIf(
-                            oldReaction == PostReactionType.TASK,
-                            newReaction == PostReactionType.TASK
-                        ),
-                    wasReactionJustChanged = true
-                )
+            val newTotalCount = when {
+                isAdding -> post.reactionCount + 1
+                isRemoving -> post.reactionCount - 1
+                else -> post.reactionCount
             }
 
-            updateState { copy(posts = updatedPosts) }
+            handleReactionDebounce(old = oldReaction, new = newReaction, postId = post.id)
 
-            // Debounced backend sync
-            debounceReactionUpdate(postId = id, reactionType = newReaction)
-        }
+            post.copy(
+                userReaction = newReaction,
+                reactionCount = newTotalCount,
+                reactionFireCount = post.reactionFireCount.adjustCount(
+                    old = oldReaction,
+                    new = newReaction,
+                    target = PostReactionType.FIRE
+                ),
+                reactionHeartCount = post.reactionHeartCount.adjustCount(
+                    old = oldReaction,
+                    new = newReaction,
+                    target = PostReactionType.HEART
+                ),
+                reactionCookieCount = post.reactionCookieCount.adjustCount(
+                    old = oldReaction,
+                    new = newReaction,
+                    target = PostReactionType.COOKIE
+                ),
+                reactionCheerCount = post.reactionCheerCount.adjustCount(
+                    old = oldReaction,
+                    new = newReaction,
+                    target = PostReactionType.CHEER
+                ),
+                reactionTaskCount = post.reactionTaskCount.adjustCount(
+                    old = oldReaction,
+                    new = newReaction,
+                    target = PostReactionType.TASK
+                ),
+                wasReactionJustChanged = true
+            )
+        } ?: return
+
+        updateState { copy(posts = updatedPosts) }
     }
 
     private fun toggleReactionSelector(id: String, visible: Boolean) {
@@ -122,10 +111,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun debounceReactionUpdate(postId: String, reactionType: PostReactionType) {
+    private fun handleReactionDebounce(old: PostReactionType?, new: PostReactionType?, postId: String) {
+        when {
+            // Create
+            old == null && new != null -> createReactionDebounce(postId, new)
+            //old != null && new == null -> deleteReactionDebounce(postId)
+            //old != null && new != null && old != new -> updateReactionDebounce(postId, new)
+        }
+    }
+
+    private fun createReactionDebounce(postId: String, reactionType: PostReactionType) {
         debounceJobs[postId]?.cancel()
         debounceJobs[postId] = viewModelScope.launch {
-            delay(200)
+            delay(150)
             createReaction(postId, reactionType)
             debounceJobs.remove(postId)
         }
@@ -141,7 +139,6 @@ class HomeViewModel @Inject constructor(
                     is Resource.Success -> updateState { this.copy(posts = resource.data.map { it.toPresentation() }) }
                     is Resource.Error -> updateState { this.copy(error = resource.error) }
                 }
-                Log.d("POST_RESOURCE", "$resource")
             }
         }
     }
@@ -149,18 +146,14 @@ class HomeViewModel @Inject constructor(
     private fun createReaction(postId: String, reactionType: PostReactionType) {
         viewModelScope.launch {
             createReactionUseCase(
-                reaction = Reaction(
-                    postId = postId,
-                    type = reactionType.toDomain()
-                )
+                postId = postId,
+                reactionType = reactionType.toDomain()
             ).collectLatest { resource ->
                 when (resource) {
                     is Resource.Success -> {}
                     is Resource.Error -> {
-                        Log.d("PROGRESS_REACTION", "ERROR")
                         emitEffect(effect = HomeEffect.ShowError(resource.error.toMessageRes()))
                     }
-
                     is Resource.Loading -> {}
                 }
             }

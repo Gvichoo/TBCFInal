@@ -48,21 +48,10 @@ class PostRepositoryImpl @Inject constructor(
                 }
             }
 
-            // 2. Fetch user reactions
-            val reactionsSnapshot = firestore.collection("reactions")
-                .whereEqualTo("authorId", currentUserId)
-                .get()
-                .await()
-
-            val reactionMap = reactionsSnapshot.documents.associateBy(
-                { it.getString("postId") ?: "" },
-                { it.getString("type") ?: "NONE" }
-            )
 
             // 3. Merge: Map userReaction to each post
             val postsWithReactions = posts.map { dto ->
-                val userReaction = reactionMap[dto.id] ?: "NONE"
-                dto.toDomain().copy(userReaction = ReactionType.valueOf(userReaction))
+                dto.toDomain()
             }
 
             emit(Resource.Success(postsWithReactions))

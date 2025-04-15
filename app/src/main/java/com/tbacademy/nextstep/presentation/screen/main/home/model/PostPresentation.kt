@@ -16,7 +16,7 @@ data class PostPresentation(
     val type: String,
     val imageUrl: String? = null,
     val createdAt: String,
-    val userReaction: PostReactionType = PostReactionType.NONE,
+    val userReaction: PostReactionType? = null,
     val isReactionsPopUpVisible: Boolean = false,
     val wasReactionJustChanged: Boolean = false
 )

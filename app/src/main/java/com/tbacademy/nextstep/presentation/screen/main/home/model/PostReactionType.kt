@@ -3,7 +3,6 @@ package com.tbacademy.nextstep.presentation.screen.main.home.model
 import com.tbacademy.nextstep.R
 
 enum class PostReactionType(val iconRes: Int, val titleRes: Int = R.string.react, val backgroundRes: Int) {
-    NONE(iconRes = R.drawable.ic_reaction_fire_24px, backgroundRes = R.drawable.bg_reaction_fire),
     FIRE(iconRes = R.drawable.ic_reaction_fire_24px, titleRes = R.string.fire, backgroundRes = R.drawable.bg_reaction_fire),
     HEART(iconRes = R.drawable.ic_reaction_heart_24px, titleRes = R.string.heart, backgroundRes = R.drawable.bg_reaction_heart),
     COOKIE(iconRes = R.drawable.ic_reaction_cookie_24px, titleRes = R.string.cookie, backgroundRes = R.drawable.bg_reaction_cookie),

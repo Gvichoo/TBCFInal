@@ -1,8 +1,6 @@
 package com.tbacademy.nextstep.data.repository.reaction
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tbacademy.nextstep.data.common.mapper.toApiError
 import com.tbacademy.nextstep.data.remote.dto.ReactionDto
@@ -40,13 +38,13 @@ class ReactionRepositoryImpl @Inject constructor(
 
                 when {
                     // Delete
-                    reaction.type.name == ReactionType.NONE.name && existingDoc != null -> {
+                    reaction.type == ReactionType.NONE && existingDoc != null -> {
                         existingDoc.reference.delete().await()
                     }
 
                     // Update
                     existingDoc != null -> {
-                        existingDoc.reference.update("type", reaction.type.name).await()
+                        existingDoc.reference.update("type", reaction.type).await()
                     }
 
                     // Create

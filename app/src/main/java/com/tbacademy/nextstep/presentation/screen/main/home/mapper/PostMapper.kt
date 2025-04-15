@@ -12,9 +12,15 @@ fun Post.toPresentation(): PostPresentation {
         title,
         description,
         reactionCount,
+        reactionFireCount,
+        reactionHeartCount,
+        reactionCookieCount,
+        reactionCheerCount,
+        reactionTaskCount,
         commentCount,
         type,
         imageUrl,
-        createdAt.toTimeAgo()
+        createdAt.toTimeAgo(),
+        userReaction = userReaction.toPresentation()
     )
 }

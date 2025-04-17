@@ -3,6 +3,7 @@ package com.tbacademy.nextstep.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.tbacademy.nextstep.data.httpHelper.FirebaseHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,5 +26,13 @@ object AppModule {
     @Singleton
     fun provideFirebaseStorage(): FirebaseStorage {
         return FirebaseStorage.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseHelper(
+        firebaseAuth: FirebaseAuth
+    ): FirebaseHelper {
+        return FirebaseHelper(firebaseAuth)
     }
 }

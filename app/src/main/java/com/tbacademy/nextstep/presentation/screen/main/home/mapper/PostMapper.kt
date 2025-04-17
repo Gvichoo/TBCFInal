@@ -21,6 +21,6 @@ fun Post.toPresentation(): PostPresentation {
         type,
         imageUrl,
         createdAt.toTimeAgo(),
-        userReaction = userReaction.toPresentation()
+        userReaction = userReaction?.toPresentation()
     )
 }

@@ -5,9 +5,7 @@ import com.tbacademy.nextstep.domain.core.ApiError
 import com.tbacademy.nextstep.domain.core.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
 import retrofit2.Response
-import java.io.IOException
 
 class ApiHelper {
     suspend fun <T> handleHttpRequest(

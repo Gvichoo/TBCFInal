@@ -1,9 +1,15 @@
 package com.tbacademy.nextstep.presentation.extension
 
-fun Int.incrementIf(oldIsType: Boolean, newIsType: Boolean): Int {
+import com.tbacademy.nextstep.presentation.screen.main.home.model.PostReactionType
+
+fun Int.adjustCount(
+    old: PostReactionType?,
+    new: PostReactionType?,
+    target: PostReactionType
+): Int {
     return when {
-        oldIsType && !newIsType -> this - 1
-        !oldIsType && newIsType -> this + 1
+        old == target && new != target -> this - 1
+        old != target && new == target -> this + 1
         else -> this
     }
 }

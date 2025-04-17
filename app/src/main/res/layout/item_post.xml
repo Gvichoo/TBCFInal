@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="8dp"
@@ -181,72 +182,21 @@
 
     <!--    Multiple reaction types-->
 
-    <LinearLayout
-        android:id="@+id/reactionPopup"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvReaction"
         android:layout_width="wrap_content"
-        android:translationZ="4dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/bg_reaction_popup"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:visibility="gone"
+        android:translationZ="4dp"
+        android:paddingHorizontal="@dimen/distance_xs"
+        android:background="@drawable/bg_reaction_popup"
+        android:paddingVertical="@dimen/distance_xs"
         app:layout_constraintBottom_toTopOf="@id/btnReaction"
         app:layout_constraintEnd_toEndOf="@id/btnComment"
-        app:layout_constraintStart_toStartOf="@id/btnReaction">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/reactionFire"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/distance_xs"
-            android:layout_marginEnd="@dimen/distance_sm"
-            android:background="@drawable/bg_reaction_fire"
-            android:padding="4dp"
-            android:src="@drawable/ic_reaction_fire_24px" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/reactionHeart"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/distance_sm"
-            android:background="@drawable/bg_reaction_heart"
-            android:padding="4dp"
-            android:src="@drawable/ic_reaction_heart_24px" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/reactionCookie"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/distance_sm"
-            android:background="@drawable/bg_reaction_cookie"
-            android:padding="4dp"
-            android:src="@drawable/ic_reaction_cookie_24px" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/reactionCheer"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/distance_sm"
-            android:background="@drawable/bg_reaction_cheer"
-            android:padding="4dp"
-            android:src="@drawable/ic_reaction_cheer_24px" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/reactionTask"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/distance_xs"
-            android:background="@drawable/bg_reaction_task"
-            android:padding="4dp"
-            android:src="@drawable/ic_reaction_task_24px" />
-
-    </LinearLayout>
+        android:layout_marginBottom="@dimen/distance_xs"
+        android:layout_marginStart="@dimen/distance_xs"
+        app:layout_constraintStart_toStartOf="@id/btnReaction"
+        tools:listitem="@layout/item_reaction_option" />
 
     <!--    Comment Btn -->
 

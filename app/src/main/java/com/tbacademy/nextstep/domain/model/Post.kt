@@ -14,7 +14,7 @@ data class Post(
     val reactionCookieCount: Int = 0,
     val reactionCheerCount: Int = 0,
     val reactionTaskCount: Int = 0,
-    val userReaction: ReactionType = ReactionType.NONE,
+    val userReaction: ReactionType? = null,
     val commentCount: Int,
     val type: String,
     val imageUrl: String? = null,

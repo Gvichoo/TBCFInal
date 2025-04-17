@@ -6,18 +6,19 @@ import com.tbacademy.nextstep.domain.repository.reaction.ReactionRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-interface CreateReactionUseCase {
+interface UpdateReactionUseCase {
     suspend operator fun invoke(postId: String, reactionType: ReactionType): Flow<Resource<Boolean>>
 }
 
-class CreateReactionUseCaseImpl @Inject constructor(
+class UpdateReactionUseCaseImpl @Inject constructor(
     private val reactionRepository: ReactionRepository
-) : CreateReactionUseCase {
+) : UpdateReactionUseCase {
     override suspend fun invoke(
         postId: String,
         reactionType: ReactionType
     ): Flow<Resource<Boolean>> {
-        return reactionRepository.createReaction(postId = postId, type = reactionType)
+        return reactionRepository.updateReaction(
+            postId = postId, newType = reactionType
+        )
     }
 }
-

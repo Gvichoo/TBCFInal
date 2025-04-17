@@ -6,6 +6,10 @@ import com.tbacademy.nextstep.domain.usecase.post.GetPostsUseCase
 import com.tbacademy.nextstep.domain.usecase.post.GetPostsUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.reaction.CreateReactionUseCase
 import com.tbacademy.nextstep.domain.usecase.reaction.CreateReactionUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.reaction.DeleteReactionUseCase
+import com.tbacademy.nextstep.domain.usecase.reaction.DeleteReactionUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.reaction.UpdateReactionUseCase
+import com.tbacademy.nextstep.domain.usecase.reaction.UpdateReactionUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.userSession.ClearValueFromLocalStorageUseCase
 import com.tbacademy.nextstep.domain.usecase.userSession.ClearValueFromLocalStorageUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.userSession.ReadValueFromLocalStorageUseCase
@@ -63,31 +67,31 @@ interface UseCaseModule {
 
     @Singleton
     @Binds
-    fun bindGetValueFromLocalStorageUseCase(impl: ReadValueFromLocalStorageUseCaseImpl) : ReadValueFromLocalStorageUseCase
+    fun bindGetValueFromLocalStorageUseCase(impl: ReadValueFromLocalStorageUseCaseImpl): ReadValueFromLocalStorageUseCase
 
     @Singleton
     @Binds
-    fun bindSaveValueToLocalStorageUseCase(impl : SaveValueToLocalStorageUseCaseImpl) : SaveValueToLocalStorageUseCase
+    fun bindSaveValueToLocalStorageUseCase(impl: SaveValueToLocalStorageUseCaseImpl): SaveValueToLocalStorageUseCase
 
     @Singleton
     @Binds
-    fun bindClearValueFromLocalStorageUseCase(impl : ClearValueFromLocalStorageUseCaseImpl) : ClearValueFromLocalStorageUseCase
+    fun bindClearValueFromLocalStorageUseCase(impl: ClearValueFromLocalStorageUseCaseImpl): ClearValueFromLocalStorageUseCase
 
     @Singleton
     @Binds
-    fun bindCreateGoalUseCase(impl : CreateGoalUseCaseImpl) : CreateGoalUseCase
+    fun bindCreateGoalUseCase(impl: CreateGoalUseCaseImpl): CreateGoalUseCase
 
     @Singleton
     @Binds
-    fun bindValidateAddGoalTitleUseCase(impl : ValidateAddGoalTitleUseCaseImpl) : ValidateAddGoalTitleUseCase
+    fun bindValidateAddGoalTitleUseCase(impl: ValidateAddGoalTitleUseCaseImpl): ValidateAddGoalTitleUseCase
 
     @Singleton
     @Binds
-    fun bindValidateAddGoalDescriptionUseCase(impl : ValidateAddGoalDescriptionUseCaseImpl) : ValidateAddGoalDescriptionUseCase
+    fun bindValidateAddGoalDescriptionUseCase(impl: ValidateAddGoalDescriptionUseCaseImpl): ValidateAddGoalDescriptionUseCase
 
     @Singleton
     @Binds
-    fun bindValidateAddGoalDateUseCase(impl : ValidateAddGoalDateUseCaseImpl) : ValidateAddGoalDateUseCase
+    fun bindValidateAddGoalDateUseCase(impl: ValidateAddGoalDateUseCaseImpl): ValidateAddGoalDateUseCase
 
     @Singleton
     @Binds
@@ -95,15 +99,22 @@ interface UseCaseModule {
 
     @Singleton
     @Binds
-    fun bindValidateMetricTargetUseCase(impl : ValidateMetricTargetUseCaseImpl) : ValidateMetricTargetUseCase
+    fun bindValidateMetricTargetUseCase(impl: ValidateMetricTargetUseCaseImpl): ValidateMetricTargetUseCase
 
     @Singleton
     @Binds
-    fun bindValidateMetricUnitUseCase(impl : ValidateMetricUnitUseCaseImpl) : ValidateMetricUnitUseCase
+    fun bindValidateMetricUnitUseCase(impl: ValidateMetricUnitUseCaseImpl): ValidateMetricUnitUseCase
 
     @Singleton
     @Binds
     fun bindCreateReactionUseCale(impl: CreateReactionUseCaseImpl): CreateReactionUseCase
 
+    @Singleton
+    @Binds
+    fun bindDeleteReactionUseCase(impl: DeleteReactionUseCaseImpl): DeleteReactionUseCase
+
+    @Singleton
+    @Binds
+    fun bindUpdateReactionUseCase(impl: UpdateReactionUseCaseImpl): UpdateReactionUseCase
 
 }

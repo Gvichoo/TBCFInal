@@ -3,8 +3,11 @@ package com.tbacademy.nextstep.presentation.screen.main.home
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.domain.core.Resource
+import com.tbacademy.nextstep.domain.core.onError
 import com.tbacademy.nextstep.domain.usecase.post.GetPostsUseCase
 import com.tbacademy.nextstep.domain.usecase.reaction.CreateReactionUseCase
+import com.tbacademy.nextstep.domain.usecase.reaction.DeleteReactionUseCase
+import com.tbacademy.nextstep.domain.usecase.reaction.UpdateReactionUseCase
 import com.tbacademy.nextstep.presentation.base.BaseViewModel
 import com.tbacademy.nextstep.presentation.common.mapper.toMessageRes
 import com.tbacademy.nextstep.presentation.extension.adjustCount
@@ -24,7 +27,9 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getPostsUseCase: GetPostsUseCase,
-    private val createReactionUseCase: CreateReactionUseCase
+    private val createReactionUseCase: CreateReactionUseCase,
+    private val updateReactionUseCase: UpdateReactionUseCase,
+    private val deleteReactionUseCase: DeleteReactionUseCase
 ) : BaseViewModel<HomeState, HomeEvent, HomeEffect, Unit>(
     initialState = HomeState(),
     initialUiState = Unit
@@ -57,13 +62,25 @@ class HomeViewModel @Inject constructor(
             val isRemoving = oldReaction != null && newReaction == null
 
             val newTotalCount = when {
-                isAdding -> post.reactionCount + 1
-                isRemoving -> post.reactionCount - 1
-                else -> post.reactionCount
+                isAdding -> {
+                    newReaction?.let {
+                        debounceCreateReaction(postId = id, reactionType = it)
+                    }
+                    post.reactionCount + 1
+                }
+
+                isRemoving -> {
+                    debounceDeleteReaction(postId = id)
+                    post.reactionCount - 1
+                }
+
+                else -> {
+                    newReaction?.let {
+                        debounceUpdateReaction(postId = id, reactionType = it)
+                    }
+                    post.reactionCount
+                }
             }
-
-            handleReactionDebounce(old = oldReaction, new = newReaction, postId = post.id)
-
             post.copy(
                 userReaction = newReaction,
                 reactionCount = newTotalCount,
@@ -111,20 +128,29 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun handleReactionDebounce(old: PostReactionType?, new: PostReactionType?, postId: String) {
-        when {
-            // Create
-            old == null && new != null -> createReactionDebounce(postId, new)
-            //old != null && new == null -> deleteReactionDebounce(postId)
-            //old != null && new != null && old != new -> updateReactionDebounce(postId, new)
-        }
-    }
-
-    private fun createReactionDebounce(postId: String, reactionType: PostReactionType) {
+    private fun debounceCreateReaction(postId: String, reactionType: PostReactionType) {
         debounceJobs[postId]?.cancel()
         debounceJobs[postId] = viewModelScope.launch {
             delay(150)
-            createReaction(postId, reactionType)
+            createReaction(postId = postId, reactionType = reactionType)
+            debounceJobs.remove(postId)
+        }
+    }
+
+    private fun debounceUpdateReaction(postId: String, reactionType: PostReactionType) {
+        debounceJobs[postId]?.cancel()
+        debounceJobs[postId] = viewModelScope.launch {
+            delay(150)
+            updateReaction(postId = postId, reactionType = reactionType)
+            debounceJobs.remove(postId)
+        }
+    }
+
+    private fun debounceDeleteReaction(postId: String) {
+        debounceJobs[postId]?.cancel()
+        debounceJobs[postId] = viewModelScope.launch {
+            delay(150)
+            deleteReaction(postId = postId)
             debounceJobs.remove(postId)
         }
     }
@@ -149,12 +175,30 @@ class HomeViewModel @Inject constructor(
                 postId = postId,
                 reactionType = reactionType.toDomain()
             ).collectLatest { resource ->
-                when (resource) {
-                    is Resource.Success -> {}
-                    is Resource.Error -> {
-                        emitEffect(effect = HomeEffect.ShowError(resource.error.toMessageRes()))
-                    }
-                    is Resource.Loading -> {}
+                resource.onError { error ->
+                    emitEffect(effect = HomeEffect.ShowError(errorRes = error.toMessageRes()))
+                }
+            }
+        }
+    }
+
+    private fun updateReaction(postId: String, reactionType: PostReactionType) {
+        viewModelScope.launch {
+            updateReactionUseCase(
+                postId = postId, reactionType = reactionType.toDomain()
+            ).collectLatest { resource ->
+                resource.onError { error ->
+                    emitEffect(effect = HomeEffect.ShowError(errorRes = error.toMessageRes()))
+                }
+            }
+        }
+    }
+
+    private fun deleteReaction(postId: String) {
+        viewModelScope.launch {
+            deleteReactionUseCase(postId = postId).collectLatest { resource ->
+                resource.onError { error ->
+                    emitEffect(effect = HomeEffect.ShowError(errorRes = error.toMessageRes()))
                 }
             }
         }

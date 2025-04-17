@@ -21,7 +21,7 @@ class ReactionRepositoryImpl @Inject constructor(
         postId: String,
         type: ReactionType
     ): Flow<Resource<Boolean>> {
-        return firebaseHelper.withUserFlow { userId ->
+        return firebaseHelper.withUserIdFlow { userId ->
             val reactionRef = firestore.collection(REACTION_COLLECTION_KEY).document()
 
             val reactionDto = ReactionDto(
@@ -40,7 +40,7 @@ class ReactionRepositoryImpl @Inject constructor(
         postId: String,
         newType: ReactionType
     ): Flow<Resource<Boolean>> {
-        return firebaseHelper.withUserFlow { userId ->
+        return firebaseHelper.withUserIdFlow { userId ->
             getReactionDoc(postId = postId, userId = userId).update(REACTION_TYPE_FIELD, newType)
                 .await()
             true
@@ -49,7 +49,7 @@ class ReactionRepositoryImpl @Inject constructor(
 
 
     override suspend fun deleteReaction(postId: String): Flow<Resource<Boolean>> {
-        return firebaseHelper.withUserFlow { userId ->
+        return firebaseHelper.withUserIdFlow { userId ->
             getReactionDoc(postId = postId, userId = userId).delete().await()
             true
         }

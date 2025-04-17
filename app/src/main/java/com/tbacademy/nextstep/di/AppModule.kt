@@ -31,8 +31,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFirebaseHelper(
-        firebaseAuth: FirebaseAuth
+        firebaseAuth: FirebaseAuth,
+        firestore: FirebaseFirestore
     ): FirebaseHelper {
-        return FirebaseHelper(firebaseAuth)
+        return FirebaseHelper(firebaseAuth = firebaseAuth, firestore = firestore)
     }
 }

@@ -49,7 +49,7 @@ class CommentsSheetFragment : BottomSheetDialogFragment() {
 
         listeners()
         observers()
-        
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 val postId = requireArguments().getString(ARG_POST_ID) ?: return@repeatOnLifecycle
@@ -64,6 +64,7 @@ class CommentsSheetFragment : BottomSheetDialogFragment() {
 
     private fun listeners() {
         setCommentInputListener()
+        setSendBtnListener()
     }
 
     private fun observers() {
@@ -88,6 +89,12 @@ class CommentsSheetFragment : BottomSheetDialogFragment() {
                     imm.showSoftInput(binding.etComment, InputMethodManager.SHOW_IMPLICIT)
                 }
             }
+        }
+    }
+
+    private fun setSendBtnListener() {
+        binding.btnSend.setOnClickListener {
+            commentsViewModel.onEvent(CommentsEvent.CreateComment)
         }
     }
 

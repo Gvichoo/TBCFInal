@@ -1,6 +1,5 @@
 package com.tbacademy.nextstep.data.repository.post
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -21,7 +20,7 @@ class PostRepositoryImpl @Inject constructor(
     private val firebaseHelper: FirebaseHelper
 ) : PostRepository {
     override suspend fun getPosts(): Flow<Resource<List<Post>>> {
-        return firebaseHelper.withUserFlow { userId ->
+        return firebaseHelper.withUserIdFlow { userId ->
 
             val postsSnapshot = firestore.collection(POSTS_COLLECTION_PATH)
                 .orderBy(SORT_CREATED_AT, Query.Direction.DESCENDING)

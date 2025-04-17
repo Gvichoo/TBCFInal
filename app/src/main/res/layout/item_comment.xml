@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/distance_sm"
+    android:paddingHorizontal="@dimen/distance_sm">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivProfile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/df_profile_picture"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/CircleImageShape" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/distance_xs"
+        android:textStyle="bold"
+        android:text="Nika Tabatadze"
+        app:layout_constraintStart_toEndOf="@id/ivProfile"
+        app:layout_constraintTop_toTopOf="@id/ivProfile" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        app:layout_constraintStart_toEndOf="@id/tvAuthor"
+        app:layout_constraintBottom_toBottomOf="@id/tvAuthor"
+        android:layout_marginStart="@dimen/distance_xs"
+        android:text="3d"
+        android:alpha="0.7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvCommentBody"
+        app:layout_constraintStart_toStartOf="@id/tvAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/ivProfile"
+        android:text="Vai Satsodao Saqartvelo es ra dgeshi xar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,13 +1,11 @@
-package com.tbacademy.nextstep.presentation.screen.main.home
+package com.tbacademy.nextstep.presentation.screen.main.home.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tbacademy.nextstep.databinding.ItemReactionOptionBinding
-import com.tbacademy.nextstep.presentation.common.extension.animatePopIn
 import com.tbacademy.nextstep.presentation.screen.main.home.model.PostReactionType
 import com.tbacademy.nextstep.presentation.screen.main.home.model.ReactionOption
 

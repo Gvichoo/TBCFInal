@@ -1,4 +1,4 @@
-package com.tbacademy.nextstep.presentation.screen.main.home
+package com.tbacademy.nextstep.presentation.screen.main.home.adapter
 
 import android.os.Bundle
 import android.util.Log
@@ -17,9 +17,9 @@ import com.tbacademy.nextstep.presentation.common.extension.animatePopIn
 import com.tbacademy.nextstep.presentation.common.extension.animatePopupIn
 import com.tbacademy.nextstep.presentation.common.extension.animateSelected
 import com.tbacademy.nextstep.presentation.extension.loadImagesGlide
-import com.tbacademy.nextstep.presentation.screen.main.home.PostsAdapter.Companion.POPUP_VISIBILITY_CHANGED_KEY
-import com.tbacademy.nextstep.presentation.screen.main.home.PostsAdapter.Companion.REACTION_CHANGED_KEY
-import com.tbacademy.nextstep.presentation.screen.main.home.PostsAdapter.Companion.REACTION_COUNT_CHANGED_KEY
+import com.tbacademy.nextstep.presentation.screen.main.home.adapter.PostsAdapter.Companion.POPUP_VISIBILITY_CHANGED_KEY
+import com.tbacademy.nextstep.presentation.screen.main.home.adapter.PostsAdapter.Companion.REACTION_CHANGED_KEY
+import com.tbacademy.nextstep.presentation.screen.main.home.adapter.PostsAdapter.Companion.REACTION_COUNT_CHANGED_KEY
 import com.tbacademy.nextstep.presentation.screen.main.home.extension.topReactions
 import com.tbacademy.nextstep.presentation.screen.main.home.model.PostPresentation
 import com.tbacademy.nextstep.presentation.screen.main.home.model.PostReactionType
@@ -53,7 +53,9 @@ class PostsDiffUtil : DiffUtil.ItemCallback<PostPresentation>() {
 
 class PostsAdapter(
     private val updateUserReaction: (postId: String, reactionType: PostReactionType?) -> Unit,
-    private val reactionBtnHold: (postId: String, visible: Boolean) -> Unit
+    private val reactionBtnHold: (postId: String, visible: Boolean) -> Unit,
+    private val commentsClicked: (postId: String) -> Unit,
+    private val commentsIconClicked: (postId: String) -> Unit
 ) : ListAdapter<PostPresentation, PostsAdapter.PostViewHolder>(PostsDiffUtil()) {
 
     companion object {
@@ -113,6 +115,15 @@ class PostsAdapter(
                     else
                         null
                     updateUserReaction(post.id, selectedReaction)
+                }
+
+                // Comments
+                tvComments.setOnClickListener {
+                    commentsClicked(post.id)
+                }
+
+                btnComment.setOnClickListener {
+                    commentsIconClicked(post.id)
                 }
             }
         }

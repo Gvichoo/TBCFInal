@@ -68,7 +68,7 @@ class ReactionRepositoryImpl @Inject constructor(
 
     companion object {
         const val REACTION_COLLECTION_KEY = "reactions"
-        const val REACTION_TYPE_FIELD = "field"
+        const val REACTION_TYPE_FIELD = "type"
         const val POST_ID_FIELD = "postId"
         const val AUTHOR_ID_FIELD = "authorId"
     }

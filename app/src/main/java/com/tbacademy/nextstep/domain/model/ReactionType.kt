@@ -5,5 +5,5 @@ enum class ReactionType {
     HEART,
     COOKIE,
     CHEER,
-    TASK
+    DISAPPOINTMENT
 }

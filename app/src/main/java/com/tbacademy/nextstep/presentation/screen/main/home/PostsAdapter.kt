@@ -1,15 +1,20 @@
 package com.tbacademy.nextstep.presentation.screen.main.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.databinding.ItemPostBinding
+import com.tbacademy.nextstep.presentation.common.extension.animateFadeOut
+import com.tbacademy.nextstep.presentation.common.extension.animatePopIn
+import com.tbacademy.nextstep.presentation.common.extension.animatePopupIn
 import com.tbacademy.nextstep.presentation.common.extension.animateSelected
 import com.tbacademy.nextstep.presentation.extension.loadImagesGlide
 import com.tbacademy.nextstep.presentation.screen.main.home.PostsAdapter.Companion.POPUP_VISIBILITY_CHANGED_KEY
@@ -18,6 +23,7 @@ import com.tbacademy.nextstep.presentation.screen.main.home.PostsAdapter.Compani
 import com.tbacademy.nextstep.presentation.screen.main.home.extension.topReactions
 import com.tbacademy.nextstep.presentation.screen.main.home.model.PostPresentation
 import com.tbacademy.nextstep.presentation.screen.main.home.model.PostReactionType
+import com.tbacademy.nextstep.presentation.screen.main.home.model.ReactionOption
 
 class PostsDiffUtil : DiffUtil.ItemCallback<PostPresentation>() {
     override fun areItemsTheSame(oldItem: PostPresentation, newItem: PostPresentation): Boolean {
@@ -54,13 +60,34 @@ class PostsAdapter(
         const val REACTION_CHANGED_KEY = "reaction_changed"
         const val REACTION_COUNT_CHANGED_KEY = "reaction_count_changed"
         const val POPUP_VISIBILITY_CHANGED_KEY = "popup_visibility_changed"
+
+        val REACTION_OPTIONS = PostReactionType.entries.map {
+            ReactionOption(type = it)
+        }
     }
+
 
     inner class PostViewHolder(private val binding: ItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        private var currentPost: PostPresentation? = null
+
+        private val reactionPickerAdapter by lazy {
+            ReactionPickerAdapter(
+                reactions = REACTION_OPTIONS,
+                onReactionSelected = { reaction ->
+                    Log.d("REACTION_SELECTED", "$reaction")
+                    currentPost?.let { updateUserReaction(it.id, reaction) }
+                }
+            )
+        }
 
         fun onBind(post: PostPresentation) {
+            currentPost = post
             binding.apply {
+                rvReaction.hasFixedSize()
+                rvReaction.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+                rvReaction.adapter = reactionPickerAdapter
+
                 tvAuthor.text = post.authorUsername
                 tvTitle.text = post.title
                 tvDescription.text = post.description
@@ -68,16 +95,16 @@ class PostsAdapter(
                 tvReactionsCount.text = post.reactionCount.toString()
                 tvCommentsCount.text = post.commentCount.toString()
 
-                // Set Active Reaction
-                ivReactionIcon.animateSelected()
                 setReactions(post = post)
 
                 // Reactions Pop Up
                 btnReaction.setOnLongClickListener {
                     reactionBtnHold(post.id, true)
+                    rvReaction.animatePopupIn()
                     true
                 }
-                reactionPopup.isVisible = post.isReactionsPopUpVisible
+                rvReaction.isVisible = post.isReactionsPopUpVisible
+
 
                 // Handle Reaction
                 btnReaction.setOnClickListener {
@@ -114,7 +141,16 @@ class PostsAdapter(
                 }
 
                 if (getBoolean(POPUP_VISIBILITY_CHANGED_KEY)) {
-                    binding.reactionPopup.isVisible = post.isReactionsPopUpVisible
+                    binding.apply {
+                        if (!post.isReactionsPopUpVisible) {
+                            rvReaction.animateFadeOut() {
+                                rvReaction.isVisible = false
+                            }
+                        } else {
+                            rvReaction.isVisible = true
+                            animateReactionItems(rvReaction)
+                        }
+                    }
                 }
             }
         }
@@ -156,6 +192,13 @@ class PostsAdapter(
             ivReaction3.isVisible = topReactions.size > 2
             ivReaction3.setImageResource(topReactions.getOrNull(2)?.first?.iconRes ?: 0)
             ivReaction3.setBackgroundResource(topReactions.getOrNull(2)?.first?.backgroundRes ?: 0)
+        }
+
+        private fun animateReactionItems(container: ViewGroup) {
+            for (i in 0 until container.childCount) {
+                val child = container.getChildAt(i)
+                child.animatePopIn(delay = i * 40L)
+            }
         }
     }
 

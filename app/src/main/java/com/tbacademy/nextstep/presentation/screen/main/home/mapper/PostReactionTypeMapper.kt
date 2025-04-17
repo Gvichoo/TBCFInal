@@ -8,7 +8,7 @@ fun PostReactionType.toDomain(): ReactionType = when (this) {
     PostReactionType.HEART -> ReactionType.HEART
     PostReactionType.COOKIE -> ReactionType.COOKIE
     PostReactionType.CHEER -> ReactionType.CHEER
-    PostReactionType.TASK -> ReactionType.TASK
+    PostReactionType.DISAPPOINTMENT -> ReactionType.DISAPPOINTMENT
 }
 
 fun ReactionType.toPresentation(): PostReactionType = when (this) {
@@ -16,5 +16,5 @@ fun ReactionType.toPresentation(): PostReactionType = when (this) {
     ReactionType.HEART -> PostReactionType.HEART
     ReactionType.COOKIE -> PostReactionType.COOKIE
     ReactionType.CHEER -> PostReactionType.CHEER
-    ReactionType.TASK -> PostReactionType.TASK
+    ReactionType.DISAPPOINTMENT -> PostReactionType.DISAPPOINTMENT
 }

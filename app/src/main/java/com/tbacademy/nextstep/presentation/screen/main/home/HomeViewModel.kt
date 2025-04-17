@@ -1,6 +1,5 @@
 package com.tbacademy.nextstep.presentation.screen.main.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.core.onError
@@ -52,10 +51,8 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun reactToPost(id: String, newReaction: PostReactionType?) {
-        Log.d("REACT_TO_POST_VIEWMODEL", "$newReaction")
         val updatedPosts = state.value.posts?.map { post ->
             if (post.id != id) return@map post
-
             val oldReaction = post.userReaction
 
             val isAdding = oldReaction == null && newReaction != null
@@ -76,11 +73,14 @@ class HomeViewModel @Inject constructor(
 
                 else -> {
                     newReaction?.let {
-                        debounceUpdateReaction(postId = id, reactionType = it)
+                        if (newReaction != oldReaction) {
+                            debounceUpdateReaction(postId = id, reactionType = it)
+                        }
                     }
                     post.reactionCount
                 }
             }
+
             post.copy(
                 userReaction = newReaction,
                 reactionCount = newTotalCount,
@@ -104,12 +104,12 @@ class HomeViewModel @Inject constructor(
                     new = newReaction,
                     target = PostReactionType.CHEER
                 ),
-                reactionTaskCount = post.reactionTaskCount.adjustCount(
+                reactionDisappointmentCount = post.reactionDisappointmentCount.adjustCount(
                     old = oldReaction,
                     new = newReaction,
-                    target = PostReactionType.TASK
+                    target = PostReactionType.DISAPPOINTMENT
                 ),
-                wasReactionJustChanged = true
+                isReactionsPopUpVisible = false
             )
         } ?: return
 
@@ -123,7 +123,6 @@ class HomeViewModel @Inject constructor(
                     post.copy(isReactionsPopUpVisible = visible)
                 } else post
             }
-
             updateState { copy(posts = updatedPosts) }
         }
     }

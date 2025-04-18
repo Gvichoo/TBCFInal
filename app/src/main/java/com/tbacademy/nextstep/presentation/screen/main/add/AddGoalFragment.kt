@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.tbacademy.nextstep.R
@@ -22,6 +23,8 @@ import com.tbacademy.nextstep.presentation.base.BaseFragment
 import com.tbacademy.nextstep.presentation.extension.collect
 import com.tbacademy.nextstep.presentation.extension.collectLatest
 import com.tbacademy.nextstep.presentation.extension.onTextChanged
+import com.tbacademy.nextstep.presentation.model.MilestoneItem
+import com.tbacademy.nextstep.presentation.screen.main.add.adapter.MilestoneAdapter
 import com.tbacademy.nextstep.presentation.screen.main.add.effect.AddGoalEffect
 import com.tbacademy.nextstep.presentation.screen.main.add.event.AddGoalEvent
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,12 +47,21 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
     private var cameraImageUri: Uri? = null
 
 
+    private val myAdapter: MilestoneAdapter by lazy {
+        MilestoneAdapter { position, newText ->
+            addGoalViewModel.onEvent(AddGoalEvent.OnMilestoneTextChanged(position, newText))
+        }
+    }
+
+
+
     @SuppressLint("DefaultLocale")
     override fun start() {
         initMediaPickerLauncher()
         setDatePicker()
 
         initCameraLauncher()
+        setUpRecycler()
     }
 
 
@@ -59,6 +71,9 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
         setSwitchListener()
         setDeleteImageButtonListener()
         setSelectImageButtonListener()
+        setAddMilestoneButtonClickListener()
+        setMinusMilestoneButtonClickListener()
+        setMilestoneSwitchListener()
     }
 
     override fun observers() {
@@ -93,6 +108,10 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
             binding.apply {
                 metricInputContainer.isVisible = uiState.isMetricEnabled
 
+                recycler.isVisible = uiState.isMileStoneEnabled
+                btnForAddAndMinusMileStoneEts.isVisible = uiState.isMileStoneEnabled
+                myAdapter.submitList(uiState.milestones)
+
                 uiState.imageUri?.let { uri ->
                     Glide.with(requireContext())
                         .load(uri)
@@ -109,6 +128,23 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
                 is AddGoalEffect.ShowError -> showMessage(effects.message)
                 AddGoalEffect.LaunchMediaPicker -> launchImagePicker()
             }
+        }
+    }
+
+    private fun setUpRecycler() {
+        binding.recycler.layoutManager = LinearLayoutManager(context)
+        binding.recycler.adapter = myAdapter
+    }
+
+    private fun setAddMilestoneButtonClickListener() {
+        binding.addMileStoneEditText.setOnClickListener {
+            addGoalViewModel.onEvent(AddGoalEvent.OnAddMilestoneButtonClicked)
+        }
+    }
+
+    private fun setMinusMilestoneButtonClickListener() {
+        binding.minusMileStoneEditText.setOnClickListener {
+            addGoalViewModel.onEvent(AddGoalEvent.OnMinusMileStoneButtonClicked)
         }
     }
 
@@ -232,6 +268,13 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
         setDateInputListener()
         setMetricTargetInputListener()
         setMetricUnitInputListener()
+    }
+
+
+    private fun setMilestoneSwitchListener() {
+        binding.switchMileStones.setOnCheckedChangeListener { _, isChecked ->
+            addGoalViewModel.onEvent(AddGoalEvent.MileStoneToggle(isChecked))
+        }
     }
 
     private fun setMetricTargetInputListener() {

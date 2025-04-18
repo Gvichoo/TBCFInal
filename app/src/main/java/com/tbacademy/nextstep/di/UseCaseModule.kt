@@ -116,7 +116,8 @@ interface UseCaseModule {
 
     fun bindValidateMilestoneUseCase(impl: ValidateMilestoneUseCaseImpl): ValidateMilestoneUseCase
 
-  
+    @Singleton
+    @Binds
     fun bindDeleteReactionUseCase(impl: DeleteReactionUseCaseImpl): DeleteReactionUseCase
 
   

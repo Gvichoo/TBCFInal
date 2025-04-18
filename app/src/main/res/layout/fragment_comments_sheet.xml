@@ -1,40 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/commentsBottomSheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.screen.main.home.comment.CommentsSheetFragment">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivNoComments"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/graphic_comments"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvNoComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No comments yet..."
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/ivNoComments"
+        app:layout_constraintStart_toStartOf="@id/ivNoComments"
+        app:layout_constraintTop_toBottomOf="@id/ivNoComments" />
+
+    <ProgressBar
+        android:id="@+id/pgComments"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvComments"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/tlComment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         tools:listitem="@layout/item_comment" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tlComment"
         android:layout_width="0dp"
-        app:layout_constraintEnd_toStartOf="@id/btnSend"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="@dimen/distance_md"
-        app:boxBackgroundMode="none"
         android:paddingHorizontal="@dimen/distance_xs"
-        android:hint="Add a comment..."
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:boxBackgroundMode="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnSend"
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etComment"
-            android:imeOptions="actionSend"
-            android:maxLines="1"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:hint="Add a comment..."
+            android:imeOptions="actionSend"
+            android:inputType="text"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -42,12 +76,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/distance_xs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tlComment"
-        app:layout_constraintBottom_toBottomOf="@id/tlComment"
-        android:src="@drawable/send_24px"
         android:layout_marginEnd="@dimen/distance_md"
         android:background="@null"
+        android:src="@drawable/send_24px"
+        app:layout_constraintBottom_toBottomOf="@id/tlComment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tlComment"
         />
+
+    <ProgressBar
+        android:id="@+id/pbSend"
+        app:layout_constraintBottom_toBottomOf="@id/tlComment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tlComment"
+        android:layout_marginEnd="@dimen/distance_md"
+        android:layout_marginTop="@dimen/distance_xs"
+        android:visibility="gone"
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

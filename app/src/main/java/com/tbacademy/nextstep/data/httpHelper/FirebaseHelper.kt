@@ -60,4 +60,8 @@ class FirebaseHelper @Inject constructor(
             emit(Resource.Loading(false))
         }
     }
+
+    companion object {
+        const val SORT_CREATED_AT = "createdAt"
+    }
 }

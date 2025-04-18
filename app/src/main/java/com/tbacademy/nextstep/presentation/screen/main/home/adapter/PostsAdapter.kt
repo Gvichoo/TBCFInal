@@ -17,6 +17,7 @@ import com.tbacademy.nextstep.presentation.common.extension.animatePopIn
 import com.tbacademy.nextstep.presentation.common.extension.animatePopupIn
 import com.tbacademy.nextstep.presentation.common.extension.animateSelected
 import com.tbacademy.nextstep.presentation.extension.loadImagesGlide
+import com.tbacademy.nextstep.presentation.screen.main.home.adapter.PostsAdapter.Companion.COMMENT_COUNT_CHANGED_KEY
 import com.tbacademy.nextstep.presentation.screen.main.home.adapter.PostsAdapter.Companion.POPUP_VISIBILITY_CHANGED_KEY
 import com.tbacademy.nextstep.presentation.screen.main.home.adapter.PostsAdapter.Companion.REACTION_CHANGED_KEY
 import com.tbacademy.nextstep.presentation.screen.main.home.adapter.PostsAdapter.Companion.REACTION_COUNT_CHANGED_KEY
@@ -46,6 +47,9 @@ class PostsDiffUtil : DiffUtil.ItemCallback<PostPresentation>() {
         if (oldItem.isReactionsPopUpVisible != newItem.isReactionsPopUpVisible) {
             diffBundle.putBoolean(POPUP_VISIBILITY_CHANGED_KEY, true)
         }
+        if (oldItem.commentCount != newItem.commentCount) {
+            diffBundle.putBoolean(COMMENT_COUNT_CHANGED_KEY, true)
+        }
 
         return if (diffBundle.isEmpty) null else diffBundle
     }
@@ -62,12 +66,12 @@ class PostsAdapter(
         const val REACTION_CHANGED_KEY = "reaction_changed"
         const val REACTION_COUNT_CHANGED_KEY = "reaction_count_changed"
         const val POPUP_VISIBILITY_CHANGED_KEY = "popup_visibility_changed"
+        const val COMMENT_COUNT_CHANGED_KEY = "comment_count_changed"
 
         val REACTION_OPTIONS = PostReactionType.entries.map {
             ReactionOption(type = it)
         }
     }
-
 
     inner class PostViewHolder(private val binding: ItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -161,6 +165,12 @@ class PostsAdapter(
                             rvReaction.isVisible = true
                             animateReactionItems(rvReaction)
                         }
+                    }
+                }
+
+                if (getBoolean(COMMENT_COUNT_CHANGED_KEY)) {
+                    binding.apply {
+                        tvCommentsCount.text = post.commentCount.toString()
                     }
                 }
             }

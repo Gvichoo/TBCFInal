@@ -1,10 +1,10 @@
 package com.tbacademy.nextstep.data.repository.post
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.tbacademy.nextstep.data.common.mapper.toDomain
 import com.tbacademy.nextstep.data.httpHelper.FirebaseHelper
+import com.tbacademy.nextstep.data.httpHelper.FirebaseHelper.Companion.SORT_CREATED_AT
 import com.tbacademy.nextstep.data.remote.dto.PostDto
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.model.Post
@@ -16,7 +16,6 @@ import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val firebaseAuth: FirebaseAuth,
     private val firebaseHelper: FirebaseHelper
 ) : PostRepository {
     override suspend fun getPosts(): Flow<Resource<List<Post>>> {
@@ -62,9 +61,6 @@ class PostRepositoryImpl @Inject constructor(
     companion object {
         const val POSTS_COLLECTION_PATH = "posts"
         const val REACTIONS_COLLECTION_PATH = "reactions"
-
-        const val SORT_CREATED_AT = "createdAt"
-
         const val AUTHOR_ID_FIELD = "authorId"
         const val POST_ID_FIELD = "postId"
         const val REACTION_TYPE_FIELD = "type"

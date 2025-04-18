@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="@dimen/distance_sm"
-    android:paddingHorizontal="@dimen/distance_sm">
+    android:paddingHorizontal="@dimen/distance_sm"
+    android:paddingVertical="@dimen/distance_sm">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivProfile"
@@ -20,26 +20,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/distance_xs"
-        android:textStyle="bold"
         android:text="Nika Tabatadze"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/ivProfile"
         app:layout_constraintTop_toTopOf="@id/ivProfile" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        app:layout_constraintStart_toEndOf="@id/tvAuthor"
-        app:layout_constraintBottom_toBottomOf="@id/tvAuthor"
-        android:layout_marginStart="@dimen/distance_xs"
-        android:text="3d"
-        android:alpha="0.7"
+        android:id="@+id/tvCreatedAt"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/distance_xs"
+        android:alpha="0.7"
+        android:text="3d"
+        app:layout_constraintBottom_toBottomOf="@id/tvAuthor"
+        app:layout_constraintStart_toEndOf="@id/tvAuthor" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvCommentBody"
-        app:layout_constraintStart_toStartOf="@id/tvAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Vai Satsodao Saqartvelo es ra dgeshi xar"
         app:layout_constraintBottom_toBottomOf="@id/ivProfile"
-        android:text="Vai Satsodao Saqartvelo es ra dgeshi xar" />
+        app:layout_constraintStart_toStartOf="@id/tvAuthor" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,7 +9,7 @@ fun PostPresentation.topReactions(): List<Pair<PostReactionType, Int>> {
         PostReactionType.HEART to reactionHeartCount,
         PostReactionType.COOKIE to reactionCookieCount,
         PostReactionType.CHEER to reactionCheerCount,
-        PostReactionType.TASK to reactionTaskCount
+        PostReactionType.DISAPPOINTMENT to reactionDisappointmentCount
     ).filter { it.second > 0 }
         .sortedByDescending { it.second }
         .take(3)

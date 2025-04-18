@@ -1,70 +1,75 @@
 package com.tbacademy.nextstep.data.repository.reaction
 
-import com.google.firebase.auth.FirebaseAuth
+import android.content.res.Resources.NotFoundException
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.tbacademy.nextstep.data.common.mapper.toApiError
+import com.tbacademy.nextstep.data.httpHelper.FirebaseHelper
 import com.tbacademy.nextstep.data.remote.dto.ReactionDto
-import com.tbacademy.nextstep.domain.core.ApiError
 import com.tbacademy.nextstep.domain.core.Resource
-import com.tbacademy.nextstep.domain.model.Reaction
 import com.tbacademy.nextstep.domain.model.ReactionType
 import com.tbacademy.nextstep.domain.repository.reaction.ReactionRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ReactionRepositoryImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val firebaseHelper: FirebaseHelper
 ) : ReactionRepository {
-    override suspend fun createOrUpdateReaction(reaction: Reaction): Flow<Resource<Boolean>> =
-        flow {
-            emit(Resource.Loading(true))
-            try {
-                val currentUser = firebaseAuth.currentUser
-                if (currentUser == null) {
-                    emit(Resource.Error(ApiError.Unauthorized))
-                    return@flow
-                }
 
-                val reactionsQuery = firestore.collection("reactions")
-                    .whereEqualTo("postId", reaction.postId)
-                    .whereEqualTo("authorId", currentUser.uid)
-                    .get()
-                    .await()
+    override suspend fun createReaction(
+        postId: String,
+        type: ReactionType
+    ): Flow<Resource<Boolean>> {
+        return firebaseHelper.withUserFlow { userId ->
+            val reactionRef = firestore.collection(REACTION_COLLECTION_KEY).document()
 
-                val existingDoc = reactionsQuery.documents.firstOrNull()
+            val reactionDto = ReactionDto(
+                id = reactionRef.id,
+                postId = postId,
+                authorId = userId,
+                type = type
+            )
+            reactionRef.set(reactionDto).await()
 
-                when {
-                    // Delete
-                    reaction.type == ReactionType.NONE && existingDoc != null -> {
-                        existingDoc.reference.delete().await()
-                    }
-
-                    // Update
-                    existingDoc != null -> {
-                        existingDoc.reference.update("type", reaction.type).await()
-                    }
-
-                    // Create
-                    else -> {
-                        val reactionRef = firestore.collection("reactions").document()
-                        val reactionDto = ReactionDto(
-                            id = reactionRef.id,
-                            postId = reaction.postId,
-                            authorId = currentUser.uid,
-                            type = reaction.type
-                        )
-                        reactionRef.set(reactionDto).await()
-                    }
-                }
-
-                emit(Resource.Success(true))
-            } catch (e: Exception) {
-                emit(Resource.Error(e.toApiError()))
-            } finally {
-                emit(Resource.Loading(false))
-            }
+            true
         }
+    }
+
+    override suspend fun updateReaction(
+        postId: String,
+        newType: ReactionType
+    ): Flow<Resource<Boolean>> {
+        return firebaseHelper.withUserFlow { userId ->
+            getReactionDoc(postId = postId, userId = userId).update(REACTION_TYPE_FIELD, newType)
+                .await()
+            true
+        }
+    }
+
+
+    override suspend fun deleteReaction(postId: String): Flow<Resource<Boolean>> {
+        return firebaseHelper.withUserFlow { userId ->
+            getReactionDoc(postId = postId, userId = userId).delete().await()
+            true
+        }
+    }
+
+    // Helpers
+    private suspend fun getReactionDoc(postId: String, userId: String): DocumentReference {
+        val query = firestore.collection(REACTION_COLLECTION_KEY)
+            .whereEqualTo(POST_ID_FIELD, postId)
+            .whereEqualTo(AUTHOR_ID_FIELD, userId)
+            .get()
+            .await()
+
+        return query.documents.firstOrNull()?.reference ?: throw NotFoundException()
+    }
+
+    companion object {
+        const val REACTION_COLLECTION_KEY = "reactions"
+        const val REACTION_TYPE_FIELD = "type"
+        const val POST_ID_FIELD = "postId"
+        const val AUTHOR_ID_FIELD = "authorId"
+    }
 }

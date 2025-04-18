@@ -14,7 +14,7 @@ data class PostDto(
     val reactionHeartCount: Int = 0,
     val reactionCookieCount: Int = 0,
     val reactionCheerCount: Int = 0,
-    val reactionTaskCount: Int = 0,
+    val reactionDisappointmentCount: Int = 0,
     val commentCount: Int = 0,
     val referenceType: String = "",
     val referenceId: String = "",

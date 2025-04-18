@@ -4,77 +4,70 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.tbacademy.nextstep.data.common.mapper.toApiError
 import com.tbacademy.nextstep.data.common.mapper.toDomain
+import com.tbacademy.nextstep.data.httpHelper.FirebaseHelper
 import com.tbacademy.nextstep.data.remote.dto.PostDto
-import com.tbacademy.nextstep.domain.core.ApiError
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.model.Post
 import com.tbacademy.nextstep.domain.model.ReactionType
 import com.tbacademy.nextstep.domain.repository.post.PostRepository
-import com.tbacademy.nextstep.presentation.screen.main.home.model.PostReactionType
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val firebaseHelper: FirebaseHelper
 ) : PostRepository {
-    override suspend fun getPosts(): Flow<Resource<List<Post>>> = flow {
-        emit(Resource.Loading(true))
-        try {
-
-            val currentUser = firebaseAuth.currentUser
-            if (currentUser == null) {
-                emit(Resource.Error(ApiError.Unauthorized))
-                return@flow
-            }
-
-            val currentUserId = currentUser.uid
+    override suspend fun getPosts(): Flow<Resource<List<Post>>> {
+        return firebaseHelper.withUserFlow { userId ->
 
             val postsSnapshot = firestore.collection(POSTS_COLLECTION_PATH)
                 .orderBy(SORT_CREATED_AT, Query.Direction.DESCENDING)
                 .get()
                 .await()
 
-            val posts: List<PostDto> = postsSnapshot.documents.mapNotNull { doc ->
-                try {
-                    doc.toObject(PostDto::class.java)?.copy(id = doc.id)
-                } catch (e: Exception) {
-                    emit(Resource.Error(e.toApiError()))
-                    return@flow
-                }
+            val postDtoList = postsSnapshot.documents.mapNotNull {
+                it.toObject(PostDto::class.java)?.copy(id = it.id)
             }
 
-            // 2. Fetch user reactions
-            val reactionsSnapshot = firestore.collection("reactions")
-                .whereEqualTo("authorId", currentUserId)
+            val postIds = postDtoList.map { it.id }
+
+            val reactionsSnapshot = firestore.collection(REACTIONS_COLLECTION_PATH)
+                .whereEqualTo(AUTHOR_ID_FIELD, userId)
+                .whereIn(POST_ID_FIELD, postIds)
                 .get()
                 .await()
 
-            val reactionMap = reactionsSnapshot.documents.associateBy(
-                { it.getString("postId") ?: "" },
-                { it.getString("type") ?: "NONE" }
-            )
+            val userReactionsMap = reactionsSnapshot.documents.mapNotNull { doc ->
+                val postId = doc.getString(POST_ID_FIELD) ?: return@mapNotNull null
+                val typeString = doc.getString(REACTION_TYPE_FIELD) ?: return@mapNotNull null
 
-            // 3. Merge: Map userReaction to each post
-            val postsWithReactions = posts.map { dto ->
-                val userReaction = reactionMap[dto.id] ?: "NONE"
-                dto.toDomain().copy(userReaction = ReactionType.valueOf(userReaction))
+                val reactionType = runCatching { ReactionType.valueOf(typeString) }.getOrNull()
+                    ?: return@mapNotNull null
+
+                postId to reactionType
+            }.toMap()
+
+            val postsWithReactionType = postDtoList.map { postDto ->
+                val userReaction = userReactionsMap[postDto.id]
+                postDto.toDomain().copy(userReaction = userReaction)
             }
 
-            emit(Resource.Success(postsWithReactions))
-        } catch (e: Exception) {
-            emit(Resource.Error(e.toApiError()))
-        } finally {
-            emit(Resource.Loading(false))
+            postsWithReactionType
         }
     }
 
+
     companion object {
         const val POSTS_COLLECTION_PATH = "posts"
+        const val REACTIONS_COLLECTION_PATH = "reactions"
+
         const val SORT_CREATED_AT = "createdAt"
+
+        const val AUTHOR_ID_FIELD = "authorId"
+        const val POST_ID_FIELD = "postId"
+        const val REACTION_TYPE_FIELD = "type"
     }
 }

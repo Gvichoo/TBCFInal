@@ -11,12 +11,11 @@ data class PostPresentation(
     val reactionHeartCount: Int = 0,
     val reactionCookieCount: Int = 0,
     val reactionCheerCount: Int = 0,
-    val reactionTaskCount: Int = 0,
+    val reactionDisappointmentCount: Int = 0,
     val commentCount: Int,
     val type: String,
     val imageUrl: String? = null,
     val createdAt: String,
-    val userReaction: PostReactionType = PostReactionType.NONE,
+    val userReaction: PostReactionType? = null,
     val isReactionsPopUpVisible: Boolean = false,
-    val wasReactionJustChanged: Boolean = false
 )

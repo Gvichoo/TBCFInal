@@ -36,6 +36,8 @@ import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricTa
 import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricTargetUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricUnitUseCase
 import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMetricUnitUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMilestoneUseCase
+import com.tbacademy.nextstep.domain.usecase.validation.addGoal.ValidateMilestoneUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -111,10 +113,16 @@ interface UseCaseModule {
 
     @Singleton
     @Binds
+
+    fun bindValidateMilestoneUseCase(impl: ValidateMilestoneUseCaseImpl): ValidateMilestoneUseCase
+
+  
     fun bindDeleteReactionUseCase(impl: DeleteReactionUseCaseImpl): DeleteReactionUseCase
 
+  
     @Singleton
     @Binds
     fun bindUpdateReactionUseCase(impl: UpdateReactionUseCaseImpl): UpdateReactionUseCase
+
 
 }

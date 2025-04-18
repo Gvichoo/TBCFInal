@@ -3,7 +3,6 @@ package com.tbacademy.nextstep.presentation.screen.main.add
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.tbacademy.nextstep.R
 import com.tbacademy.nextstep.domain.core.InputValidationResult
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.model.Goal
@@ -97,7 +96,6 @@ class AddGoalViewModel @Inject constructor(
     }
 
 
-
     private fun onAddMilestone() {
         updateUiState {
             val updatedList = milestones + MilestoneItem(id = milestoneIdCounter, text = "")
@@ -161,7 +159,6 @@ class AddGoalViewModel @Inject constructor(
             Log.d("CREATE_GOAL", "GOAL: $newGoal")
         }
     }
-
 
     //On Metric Target Update
     private fun onMetricTargetChanged(metricTarget: String) {
@@ -229,20 +226,17 @@ class AddGoalViewModel @Inject constructor(
 
         if (formIsValid) {
             uiState.value.goalDate?.let {
-                uiState.value.imageUri?.let { it1 ->
-                    createGoal(
-                        title = uiState.value.title,
-                        description = uiState.value.description,
-                        targetDate = it,
-                        metricUnit = uiState.value.metricUnit,
-                        metricTarget = uiState.value.metricTarget,
-                        isMetricEnabled = uiState.value.isMetricEnabled,
-                        imageUri = uiState.value.imageUri,
-                        isMilestoneEnable = uiState.value.isMileStoneEnabled,
-                        milestone = uiState.value.milestones
-
-                    )
-                }
+                createGoal(
+                    title = uiState.value.title,
+                    description = uiState.value.description,
+                    targetDate = it,
+                    metricUnit = uiState.value.metricUnit,
+                    metricTarget = uiState.value.metricTarget,
+                    isMetricEnabled = uiState.value.isMetricEnabled,
+                    imageUri = uiState.value.imageUri,
+                    isMilestoneEnable = uiState.value.isMileStoneEnabled,
+                    milestone = uiState.value.milestones
+                )
             }
         } else {
             updateState { this.copy(formBeenSubmitted = true) }
@@ -281,6 +275,17 @@ class AddGoalViewModel @Inject constructor(
             metricTargetError =
                 validateMetricTargetUseCase(metricTarget = metricTarget).getErrorMessageResId()
         }
+        // Update states of errors
+        updateState {
+            copy(
+                goalTitleErrorMessage = titleValidationError,
+                goalDescriptionErrorMessage = descriptionValidationForm,
+                goalDateErrorMessage = dateValidationError,
+                goalMetricUnitErrorMessage = metricUnitError,
+                goalMetricTargetErrorMessage = metricTargetError,
+
+                )
+        }
         if (isMilestoneEnable) {
             val updatedMilestones = milestone.map {
                 val error = validateMilestoneUseCase(it.text).getErrorMessageResId()
@@ -292,20 +297,6 @@ class AddGoalViewModel @Inject constructor(
             if (updatedMilestones.any { it.errorMessage != null }) {
                 return false
             }
-        }
-
-
-
-        // Update states of errors
-        updateState {
-            copy(
-                goalTitleErrorMessage = titleValidationError,
-                goalDescriptionErrorMessage = descriptionValidationForm,
-                goalDateErrorMessage = dateValidationError,
-                goalMetricUnitErrorMessage = metricUnitError,
-                goalMetricTargetErrorMessage = metricTargetError,
-
-                )
         }
 
 
@@ -329,3 +320,21 @@ class AddGoalViewModel @Inject constructor(
         else null
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,9 @@
 package com.tbacademy.nextstep.di
 
+import com.tbacademy.nextstep.domain.usecase.comment.CreateCommentUseCase
+import com.tbacademy.nextstep.domain.usecase.comment.CreateCommentUseCaseImpl
+import com.tbacademy.nextstep.domain.usecase.comment.GetCommentsUseCase
+import com.tbacademy.nextstep.domain.usecase.comment.GetCommentsUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.goal.CreateGoalUseCase
 import com.tbacademy.nextstep.domain.usecase.goal.CreateGoalUseCaseImpl
 import com.tbacademy.nextstep.domain.usecase.post.GetPostsUseCase
@@ -125,5 +129,11 @@ interface UseCaseModule {
     @Binds
     fun bindUpdateReactionUseCase(impl: UpdateReactionUseCaseImpl): UpdateReactionUseCase
 
+    @Singleton
+    @Binds
+    fun bindCreateCommentUseCase(impl: CreateCommentUseCaseImpl): CreateCommentUseCase
 
+    @Singleton
+    @Binds
+    fun bindGetCommentsUseCase(impl: GetCommentsUseCaseImpl): GetCommentsUseCase
 }

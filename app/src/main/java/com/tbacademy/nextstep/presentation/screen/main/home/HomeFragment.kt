@@ -1,5 +1,6 @@
 package com.tbacademy.nextstep.presentation.screen.main.home
 
+import android.os.Bundle
 import android.util.Log
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -9,6 +10,8 @@ import com.tbacademy.nextstep.databinding.FragmentHomeBinding
 import com.tbacademy.nextstep.presentation.base.BaseFragment
 import com.tbacademy.nextstep.presentation.extension.collect
 import com.tbacademy.nextstep.presentation.extension.collectLatest
+import com.tbacademy.nextstep.presentation.screen.main.home.adapter.PostsAdapter
+import com.tbacademy.nextstep.presentation.screen.main.home.comment.CommentsSheetFragment
 import com.tbacademy.nextstep.presentation.screen.main.home.effect.HomeEffect
 import com.tbacademy.nextstep.presentation.screen.main.home.event.HomeEvent
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,10 +22,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private val postsAdapter: PostsAdapter by lazy {
         PostsAdapter(
             updateUserReaction = { postId, reactionType ->
-                homeViewModel.onEvent(event = HomeEvent.HandleReactToPost(postId = postId, reactionType = reactionType))
+                homeViewModel.onEvent(
+                    event = HomeEvent.HandleReactToPost(
+                        postId = postId,
+                        reactionType = reactionType
+                    )
+                )
             },
             reactionBtnHold = { postId, visible ->
-                homeViewModel.onEvent(event = HomeEvent.ToggleReactionsSelector(postId = postId, visible = visible))
+                homeViewModel.onEvent(
+                    event = HomeEvent.ToggleReactionsSelector(
+                        postId = postId,
+                        visible = visible
+                    )
+                )
+            },
+            commentsClicked = { postId ->
+                homeViewModel.onEvent(event = HomeEvent.OpenPostComments(postId = postId))
+            },
+            commentsIconClicked = { postId ->
+                homeViewModel.onEvent(
+                    event = HomeEvent.OpenPostComments(
+                        postId = postId,
+                        typeActive = true
+                    )
+                )
             }
         )
     }
@@ -58,8 +82,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         collect(flow = homeViewModel.effects) { effect ->
             when (effect) {
                 is HomeEffect.ShowError -> effect.errorRes?.let { showMessage(message = it) }
+                is HomeEffect.OpenComments -> openCommentsBottomSheet(
+                    postId = effect.postId,
+                    typeActive = effect.typeActive
+                )
             }
         }
+    }
+
+    private fun openCommentsBottomSheet(postId: String, typeActive: Boolean) {
+        val commentsSheet = CommentsSheetFragment()
+        commentsSheet.arguments = Bundle().apply {
+            putString("postId", postId)
+            putBoolean("typeActive", typeActive)
+        }
+        commentsSheet.show(childFragmentManager, "CommentsSheet")
     }
 
     private fun setPostsAdapter() {

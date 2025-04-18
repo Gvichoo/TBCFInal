@@ -47,6 +47,14 @@ class HomeViewModel @Inject constructor(
                 id = event.postId,
                 visible = event.visible
             )
+
+            is HomeEvent.OpenPostComments -> sendOpenPostCommentsEffect(postId = event.postId, typeActive = event.typeActive)
+        }
+    }
+
+    private fun sendOpenPostCommentsEffect(postId: String, typeActive: Boolean) {
+        viewModelScope.launch {
+            emitEffect(HomeEffect.OpenComments(postId = postId, typeActive = typeActive))
         }
     }
 

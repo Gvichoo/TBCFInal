@@ -3,6 +3,7 @@ package com.tbacademy.nextstep.data.common.mapper
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.internal.api.FirebaseNoSignedInUserException
 import com.tbacademy.nextstep.domain.core.ApiError
 import retrofit2.HttpException
 import java.io.IOException
@@ -12,6 +13,7 @@ fun Throwable.toApiError(): ApiError = when (this) {
     is HttpException -> this.toApiError()
     is IllegalStateException -> ApiError.Custom(message ?: "Illegal state")
     is FirebaseAuthInvalidUserException -> ApiError.UserNotFound
+    is FirebaseNoSignedInUserException -> ApiError.UserNotFound
     is FirebaseAuthInvalidCredentialsException -> ApiError.InvalidCredentials
     is FirebaseAuthUserCollisionException -> ApiError.UserAlreadyExists
     else -> ApiError.Custom(message ?: "Unexpected error")

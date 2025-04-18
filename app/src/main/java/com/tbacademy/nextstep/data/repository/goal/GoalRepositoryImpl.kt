@@ -22,7 +22,7 @@ class GoalRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage
 ) : GoalRepository {
-    override suspend fun createGoal(goal: Goal): Flow<Resource<Boolean>> = flow {
+    override fun createGoal(goal: Goal): Flow<Resource<Boolean>> = flow {
         emit(Resource.Loading(loading = true))
         try {
             val currentUser = firebaseAuth.currentUser
@@ -31,7 +31,7 @@ class GoalRepositoryImpl @Inject constructor(
 
             if (userSnapshot == null) {
                 emit(Resource.Error(ApiError.Unauthorized))
-                emit(Resource.Loading(false))
+                emit(Resource.Loading(loading = false))
                 return@flow
             }
 
@@ -58,7 +58,7 @@ class GoalRepositoryImpl @Inject constructor(
 
                 // Upload goal to Firestore
                 goalRef.set(goalDto).await()
-                emit(Resource.Success(true))
+                emit(Resource.Success(data = true))
             } else {
                 emit(Resource.Error(ApiError.Unauthorized))
                 return@flow
@@ -67,7 +67,7 @@ class GoalRepositoryImpl @Inject constructor(
             emit(Resource.Error(e.toApiError()))
             Log.d("CREATE_GOAL", "GoalId: $e")
         } finally {
-            emit(Resource.Loading(false))
+            emit(Resource.Loading(loading = false))
         }
     }
 }

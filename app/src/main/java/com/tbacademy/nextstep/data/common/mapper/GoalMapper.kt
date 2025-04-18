@@ -10,10 +10,10 @@ fun Goal.toDto(): GoalDto {
         title = title,
         description = description,
         targetDate = Timestamp(targetDate),
-        isMetricBased = isMetricBased,
         metricUnit = metricUnit,
         metricTarget = metricTarget,
         createdAt = createdAt,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
+        milestone = milestone
     )
 }

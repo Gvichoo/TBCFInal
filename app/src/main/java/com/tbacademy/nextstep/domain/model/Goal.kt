@@ -14,7 +14,7 @@ data class Goal(
     val targetDate: Date,
     val createdAt: Date = Date(),
     val imageUri: Uri? = null,
-    val milestone : List<MilestoneItem>?
+    val milestone : List<MilestoneItem>? = null
 ){
     val imageUrl: String? = null
 }

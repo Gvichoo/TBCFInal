@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,10 +16,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.tbacademy.nextstep.R
+import com.tbacademy.nextstep.data.worker.UploadGoalDataWorker
 import com.tbacademy.nextstep.databinding.FragmentAddGoalBinding
+import com.tbacademy.nextstep.domain.model.Goal
 import com.tbacademy.nextstep.presentation.base.BaseFragment
 import com.tbacademy.nextstep.presentation.extension.collect
 import com.tbacademy.nextstep.presentation.extension.collectLatest
@@ -55,6 +62,8 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
 
 
+
+
     @SuppressLint("DefaultLocale")
     override fun start() {
         initMediaPickerLauncher()
@@ -62,6 +71,7 @@ class AddGoalFragment : BaseFragment<FragmentAddGoalBinding>(FragmentAddGoalBind
 
         initCameraLauncher()
         setUpRecycler()
+
     }
 
 

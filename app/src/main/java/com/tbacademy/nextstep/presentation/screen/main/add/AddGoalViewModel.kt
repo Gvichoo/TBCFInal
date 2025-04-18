@@ -1,8 +1,15 @@
 package com.tbacademy.nextstep.presentation.screen.main.add
 
+import android.app.Application
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import androidx.work.BackoffPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.tbacademy.nextstep.data.worker.UploadGoalDataWorker
 import com.tbacademy.nextstep.domain.core.InputValidationResult
 import com.tbacademy.nextstep.domain.core.Resource
 import com.tbacademy.nextstep.domain.model.Goal
@@ -24,6 +31,7 @@ import com.tbacademy.nextstep.presentation.screen.main.add.state.AddGoalUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Date
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +42,8 @@ class AddGoalViewModel @Inject constructor(
     private val validateDateUseCase: ValidateAddGoalDateUseCase,
     private val validateMetricTargetUseCase: ValidateMetricTargetUseCase,
     private val validateMetricUnitUseCase: ValidateMetricUnitUseCase,
-    private val validateMilestoneUseCase: ValidateMilestoneUseCase
+    private val validateMilestoneUseCase: ValidateMilestoneUseCase,
+    private val application: Application
 
 ) : BaseViewModel<AddGoalState, AddGoalEvent, AddGoalEffect, AddGoalUiState>(
     initialState = AddGoalState(),
